@@ -1,7 +1,7 @@
 # Rust Server Manager
 Rust Server Manager is now back on github.
 
-<2>Features</h2>
+<h2>Features</h2>
 <ul>
   <li>Graphical Config Editor (More server options and etc)</li>
   <li>Server Installer with oxidemod installer</li>
