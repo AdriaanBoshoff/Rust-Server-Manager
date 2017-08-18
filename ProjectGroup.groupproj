@@ -1,0 +1,36 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{1756AAD8-E562-4948-B56B-9E3948CC88CF}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="pRSM.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="pRSM">
+        <MSBuild Projects="pRSM.dproj"/>
+    </Target>
+    <Target Name="pRSM:Clean">
+        <MSBuild Projects="pRSM.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="pRSM:Make">
+        <MSBuild Projects="pRSM.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="pRSM"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="pRSM:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="pRSM:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
