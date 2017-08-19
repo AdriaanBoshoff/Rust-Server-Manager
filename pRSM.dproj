@@ -104,15 +104,14 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <AppEnableHighDPI>true</AppEnableHighDPI>
-        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=2.7.4.0;InternalName=Rust Server Manager;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=Rust Server Manager;ProductVersion=2.7.4.0;Comments=;ProgramID=Rust Server Manager</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Inforcer25 inc.;FileDescription=Server Manager for Rust;FileVersion=2.8.0.0;InternalName=Rust Server Manager;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=Rust Server Manager;ProductVersion=2.8.0.0;Comments=;ProgramID=Rust Server Manager</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <UWP_DelphiLogo44>C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\Image\rust.png</UWP_DelphiLogo44>
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <UWP_DelphiLogo150>C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\Image\rust.png</UWP_DelphiLogo150>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_MinorVer>7</VerInfo_MinorVer>
-        <VerInfo_Release>4</VerInfo_Release>
+        <VerInfo_MinorVer>8</VerInfo_MinorVer>
+        <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
@@ -260,6 +259,13 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="Image\rust___icon_by_blagoicons-d72pie6.png" Configuration="Debug" Class="UWP_DelphiLogo150">
+                    <Platform Name="Win32">
+                        <RemoteDir>Assets\</RemoteDir>
+                        <RemoteName>Logo150x150.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Image\rust___icon_by_blagoicons-d72pie6.png" Configuration="Release" Class="UWP_DelphiLogo150">
                     <Platform Name="Win32">
                         <RemoteDir>Assets\</RemoteDir>
                         <RemoteName>Logo150x150.png</RemoteName>

@@ -106,7 +106,7 @@ type
     btn13: TButton;
     lbl18: TLabel;
     lbl19: TLabel;
-    btn17: TButton;
+    btnbackupnow: TButton;
     lbl20: TLabel;
     lbledtrconip: TLabeledEdit;
     btn18: TButton;
@@ -132,7 +132,7 @@ type
     grpserversettings: TGroupBox;
     chkchecklatestversion: TCheckBox;
     tmrrefreshlatestversion: TTimer;
-    btn24: TButton;
+    btnpluginupdater: TButton;
     chklstconfigs: TCheckListBox;
     chklstplugins: TCheckListBox;
     chklstdata: TCheckListBox;
@@ -155,7 +155,7 @@ type
     lbl31: TLabel;
     btn25: TButton;
     btn26: TButton;
-    btn27: TButton;
+    btnenabledisableplugins: TButton;
     btncustomstart: TButton;
     apnlytcs1: TAppAnalytics;
     lbl33: TLabel;
@@ -184,11 +184,8 @@ type
     tglswtchdecay: TToggleSwitch;
     trycn1: TTrayIcon;
     pmtray: TPopupMenu;
-    Close1: TMenuItem;
     btnupdate: TButton;
     chkloadlangfile: TCheckBox;
-    btn6: TButton;
-    lbl1: TLabel;
     grplanguage: TGroupBox;
     btn8: TButton;
     btn9: TButton;
@@ -196,6 +193,30 @@ type
     btn4: TButton;
     lblserveridentity: TLabel;
     lbl3: TLabel;
+    pmserverlist: TPopupMenu;
+    MakeActive1: TMenuItem;
+    DeleteServer1: TMenuItem;
+    lbl1: TLabel;
+    ServerInstaller1: TMenuItem;
+    InstallUpdateServer1: TMenuItem;
+    VerifyServerFiles1: TMenuItem;
+    Install1: TMenuItem;
+    ServerOptions1: TMenuItem;
+    StartServer1: TMenuItem;
+    WipeOptions1: TMenuItem;
+    PluginManager1: TMenuItem;
+    OxideModBrowser1: TMenuItem;
+    UpdatePlugins1: TMenuItem;
+    ActiveServer1: TMenuItem;
+    RustPlugins1: TMenuItem;
+    UniversalPlugins1: TMenuItem;
+    EnableDisablePlugins1: TMenuItem;
+    ConnecttoServer1: TMenuItem;
+    AutoBackup1: TMenuItem;
+    Start1: TMenuItem;
+    Stop1: TMenuItem;
+    BackupNow1: TMenuItem;
+    N1: TMenuItem;
     procedure btncancelClick(Sender: TObject);
     function KillTask(ExeFileName: string): Integer;
     procedure btninstalloxidemodClick(Sender: TObject);
@@ -227,7 +248,7 @@ type
     procedure tmrbackupTimer(Sender: TObject);
     procedure tmrnextbackupTimer(Sender: TObject);
     procedure btn13Click(Sender: TObject);
-    procedure btn17Click(Sender: TObject);
+    procedure btnbackupnowClick(Sender: TObject);
     procedure lbl20Click(Sender: TObject);
     procedure btn18Click(Sender: TObject);
     procedure OpenFolder(Folder: string);
@@ -246,7 +267,7 @@ type
     procedure lbl36Click(Sender: TObject);
     procedure btn28Click(Sender: TObject);
     procedure tmrrefreshlatestversionTimer(Sender: TObject);
-    procedure btn24Click(Sender: TObject);
+    procedure btnpluginupdaterClick(Sender: TObject);
     procedure chklstconfigsDblClick(Sender: TObject);
     procedure chklstdataDblClick(Sender: TObject);
     procedure btn14Click(Sender: TObject);
@@ -259,17 +280,14 @@ type
     procedure btn23Click(Sender: TObject);
     procedure btn25Click(Sender: TObject);
     procedure btn26Click(Sender: TObject);
-    procedure btn27Click(Sender: TObject);
+    procedure btnenabledisablepluginsClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure DownloadExtraFiles;
     procedure btncustomstartClick(Sender: TObject);
     function SelectPriority: String;
-    procedure Close1Click(Sender: TObject);
     procedure btnupdateClick(Sender: TObject);
     procedure LoadLanguageFile;
     procedure MakeLanguageFile;
-    procedure btn6Click(Sender: TObject);
-    procedure lbl1Click(Sender: TObject);
     procedure btn8Click(Sender: TObject);
     procedure btn9Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -278,6 +296,26 @@ type
     procedure btn4Click(Sender: TObject);
     procedure pgc1Change(Sender: TObject);
     procedure lbl3Click(Sender: TObject);
+    procedure MakeActive1Click(Sender: TObject);
+    procedure DeleteServer1Click(Sender: TObject);
+    procedure DeleteDirectory(const Name: string);
+    procedure lbledtserveridentityKeyPress(Sender: TObject; var Key: Char);
+    procedure lbl1Click(Sender: TObject);
+    procedure ActiveServer1Click(Sender: TObject);
+    procedure StartServer1Click(Sender: TObject);
+    procedure WipeOptions1Click(Sender: TObject);
+    procedure ConnecttoServer1Click(Sender: TObject);
+    procedure InstallUpdateServer1Click(Sender: TObject);
+    procedure VerifyServerFiles1Click(Sender: TObject);
+    procedure Install1Click(Sender: TObject);
+    procedure EnableDisablePlugins1Click(Sender: TObject);
+    procedure OxideModBrowser1Click(Sender: TObject);
+    procedure UpdatePlugins1Click(Sender: TObject);
+    procedure RustPlugins1Click(Sender: TObject);
+    procedure UniversalPlugins1Click(Sender: TObject);
+    procedure Start1Click(Sender: TObject);
+    procedure Stop1Click(Sender: TObject);
+    procedure BackupNow1Click(Sender: TObject);
   private
     { Private declarations }
     //Server Options variables
@@ -305,6 +343,16 @@ implementation
 procedure Tfrmmain.btnexportinstallerlogClick(Sender: TObject);
 begin
   mmoinstaller.Lines.SaveToFile('installer.log');
+end;
+
+procedure Tfrmmain.ActiveServer1Click(Sender: TObject);
+begin
+  ShowMessage('The active server is ' + serveridentity);
+end;
+
+procedure Tfrmmain.BackupNow1Click(Sender: TObject);
+begin
+  btnbackupnow.Click;
 end;
 
 procedure Tfrmmain.btn11Click(Sender: TObject);
@@ -406,9 +454,9 @@ begin
   lblplugincount.Caption := '[' + IntToStr(chklstplugins.Items.Count) + ']';
 end;
 
-procedure Tfrmmain.Close1Click(Sender: TObject);
+procedure Tfrmmain.ConnecttoServer1Click(Sender: TObject);
 begin
-  Close;
+  btnconnect.Click;
 end;
 
 function Tfrmmain.CopyPaste(xSourcePath, xDestPath, xPara: string): Boolean;
@@ -461,9 +509,80 @@ begin
   end;
 end;
 
+procedure Tfrmmain.DeleteDirectory(const Name: string);
+var
+  F: TSearchRec;
+begin
+  if FindFirst(Name + '\*', faAnyFile, F) = 0 then begin
+    try
+      repeat
+        if (F.Attr and faDirectory <> 0) then begin
+          if (F.Name <> '.') and (F.Name <> '..') then begin
+            DeleteDirectory(Name + '\' + F.Name);
+          end;
+        end else begin
+          DeleteFile(Name + '\' + F.Name);
+        end;
+      until FindNext(F) <> 0;
+    finally
+      FindClose(F);
+    end;
+    RemoveDir(Name);
+  end;
+end;
+
+procedure Tfrmmain.DeleteServer1Click(Sender: TObject);
+var
+  serv: string;
+  ini: TIniFile;
+begin
+  if lstservers.ItemIndex = -1 then
+    begin
+      ShowMessage('No server is selected!');
+    end
+  else
+    begin
+      serv := lstservers.Items[lstservers.ItemIndex];
+      case MessageDlg('Are you sure you want to delete ' + serv + ' ? All server files like configs and plugins will be deleted for this server', mtConfirmation, [mbYes, mbCancel], 0) of
+        mrYes:
+          begin
+            if DirectoryExists('.\server\' + serv) then
+              begin
+                lstservers.DeleteSelected;
+                DeleteDirectory('.\server\' + serv);
+                ShowMessage('Server has been deleted!');
+                ini := TIniFile.Create(ini_RSMsettings);
+                try
+                  ini.WriteString('Application Settings', 'activeserver', 'server1');
+                  ini.WriteString('Server Config', 'serveridentity', 'server1');
+                finally
+                  ini.Free;
+                  LoadSettings;
+                  LoadRSMsettings;
+                end;
+              end
+            else
+              begin
+                lstservers.DeleteSelected;
+                ShowMessage('The server does not seem to exist. It has been removed from the Server List');
+              end;
+          end;
+        mrCancel:
+          begin
+            ShowMessage('Nothing has been deleted.');
+          end;
+      end;
+    end;
+end;
+
 procedure Tfrmmain.DownloadExtraFiles;
 begin
   frmextradownload.ShowModal;
+end;
+
+procedure Tfrmmain.EnableDisablePlugins1Click(Sender: TObject);
+begin
+  btnenabledisableplugins.Click;
 end;
 
 procedure Tfrmmain.btn16Click(Sender: TObject);
@@ -471,7 +590,7 @@ begin
   OpenURL('http://oxidemod.org/plugins/categories/universal.58/');
 end;
 
-procedure Tfrmmain.btn17Click(Sender: TObject);
+procedure Tfrmmain.btnbackupnowClick(Sender: TObject);
 begin
   if Trim(lbledtbackuppath.Text) <> '' then
   begin
@@ -808,7 +927,7 @@ begin
   OpenURL('https://twitter.com/inforcer25');
 end;
 
-procedure Tfrmmain.btn24Click(Sender: TObject);
+procedure Tfrmmain.btnpluginupdaterClick(Sender: TObject);
 var
   parameter: string;
 begin
@@ -836,7 +955,7 @@ begin
   OpenURL('https://developer.valvesoftware.com/wiki/Rust_Dedicated_Server');
 end;
 
-procedure Tfrmmain.btn27Click(Sender: TObject);
+procedure Tfrmmain.btnenabledisablepluginsClick(Sender: TObject);
 begin
   frmpluginenabledisable.serveridentity := serveridentity;
   frmpluginenabledisable.ShowModal;
@@ -1022,11 +1141,6 @@ begin
       ShowMessage
         ('It seems that steamcmd is not installed. Please click Install SteamCMD below');
   end;
-end;
-
-procedure Tfrmmain.btn6Click(Sender: TObject);
-begin
-  OpenURL('https://inforcer25.co.za/forum/');
 end;
 
 procedure Tfrmmain.btnstartserverClick(Sender: TObject);
@@ -1526,6 +1640,16 @@ begin
   WSACleanup;
 end;
 
+procedure Tfrmmain.Install1Click(Sender: TObject);
+begin
+  btninstalloxidemod.Click;
+end;
+
+procedure Tfrmmain.InstallUpdateServer1Click(Sender: TObject);
+begin
+  btninstallserver.Click;
+end;
+
 function Tfrmmain.IsConnected: Boolean;
 const
   // Local system has a valid connection to the Internet, but it might or might
@@ -1606,7 +1730,7 @@ end;
 
 procedure Tfrmmain.lbl1Click(Sender: TObject);
 begin
-  OpenURL('https://inforcer25.co.za/forum/');
+  OpenURL('https://github.com/Inforcer25/Rust-Server-Manager');
 end;
 
 procedure Tfrmmain.lbl20Click(Sender: TObject);
@@ -1673,6 +1797,13 @@ begin
   OpenURL('https://inforcer25.co.za/forum');
 end;
 
+procedure Tfrmmain.lbledtserveridentityKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key in ['0'..'9','A'..'Z', 'a'..'z', #8] then
+  else
+    Key := #0;
+end;
+
 procedure Tfrmmain.ListFileDir(Path: string; FileList: TStrings);
 var
   SR: TSearchRec;
@@ -1732,6 +1863,33 @@ begin
   finally
     ini.Free;
   end;
+end;
+
+procedure Tfrmmain.MakeActive1Click(Sender: TObject);
+begin
+  if lstservers.ItemIndex = -1 then
+    begin
+      ShowMessage('No server is selected!');
+    end
+  else
+    begin
+      lbledtserveridentity.Text := lstservers.Items[lstservers.ItemIndex];
+      activeserver := lbledtserveridentity.Text;
+
+      if DirectoryExists('.\server\' + activeserver) then
+      begin
+        ini_settings := '.\server\' + activeserver + '\settings.ini';
+        lbledtserveridentity.Text := activeserver;
+        LoadSettings;
+      end
+      else
+      begin
+        ForceDirectories('.\server\' + activeserver);
+        ini_settings := '.\server\' + activeserver + '\settings.ini';
+        lbledtserveridentity.Text := activeserver;
+        // LoadSettings;
+      end;
+    end;
 end;
 
 procedure Tfrmmain.MakeLanguageFile;
@@ -1973,6 +2131,7 @@ begin
       tmrrefreshlatestversion.Enabled := chkchecklatestversion.Checked;
 
       lblserveridentity.Caption := 'Active Server Identity: ' + serveridentity;
+      ActiveServer1.Caption := 'Active: ' + serveridentity;
     finally
       ini.Free;
     end;
@@ -2021,9 +2180,19 @@ begin
   ShellExecute(self.WindowHandle, 'open', Pchar(url), nil, nil, SW_SHOWNORMAL);
 end;
 
+procedure Tfrmmain.OxideModBrowser1Click(Sender: TObject);
+begin
+  frmoxidemodbrowser.Show;
+end;
+
 procedure Tfrmmain.pgc1Change(Sender: TObject);
 begin
   btnrefreshplugins.Click;
+end;
+
+procedure Tfrmmain.RustPlugins1Click(Sender: TObject);
+begin
+  OpenURL('http://oxidemod.org/plugins/categories/rust.24/?order=rating_weighted');
 end;
 
 function Tfrmmain.SelectPriority: string;
@@ -2048,9 +2217,24 @@ begin
   Result := frminstalleroption.option;
 end;
 
+procedure Tfrmmain.Start1Click(Sender: TObject);
+begin
+  btnstartbackup.Click;
+end;
+
 procedure Tfrmmain.StartApplication(Application: string);
 begin
   ShellExecute(self.WindowHandle,'open',PChar(Application),nil,nil, SW_SHOWNORMAL);
+end;
+
+procedure Tfrmmain.StartServer1Click(Sender: TObject);
+begin
+  btnstartserver.Click;
+end;
+
+procedure Tfrmmain.Stop1Click(Sender: TObject);
+begin
+  btnstopbackup.Click;
 end;
 
 procedure Tfrmmain.tmrbackupTimer(Sender: TObject);
@@ -2084,6 +2268,26 @@ end;
 procedure Tfrmmain.trckbrtransparencyChange(Sender: TObject);
 begin
   frmmain.AlphaBlendValue := trckbrtransparency.Position;
+end;
+
+procedure Tfrmmain.UniversalPlugins1Click(Sender: TObject);
+begin
+  OpenURL('http://oxidemod.org/plugins/categories/universal.58/');
+end;
+
+procedure Tfrmmain.UpdatePlugins1Click(Sender: TObject);
+begin
+  btnpluginupdater.Click;
+end;
+
+procedure Tfrmmain.VerifyServerFiles1Click(Sender: TObject);
+begin
+  btnvalidateserver.Click;
+end;
+
+procedure Tfrmmain.WipeOptions1Click(Sender: TObject);
+begin
+  btnwipeserver.Click;
 end;
 
 end.
