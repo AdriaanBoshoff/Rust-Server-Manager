@@ -49,6 +49,7 @@ end;
 procedure Tfrmdescription.FormShow(Sender: TObject);
 begin
   mmo1.SetFocus;
+  mmo1.SelStart := mmo1.SelLength;
 end;
 
 procedure Tfrmdescription.se1Change(Sender: TObject);

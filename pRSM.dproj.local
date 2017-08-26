@@ -9,19 +9,20 @@
     <Transaction>2017/07/09 15:38:01.000.012,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\Unit2.pas=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\uDownload.pas</Transaction>
     <Transaction>2017/07/09 15:38:01.000.012,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\Unit2.dfm=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\uDownload.dfm</Transaction>
     <Transaction>2017/07/10 01:57:56.000.986,=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\Unit2.pas</Transaction>
-    <Transaction>2017/07/10 01:58:09.000.778,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\Unit2.dfm=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\uCustomStart.dfm</Transaction>
     <Transaction>2017/07/10 01:58:09.000.778,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\Unit2.pas=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\uCustomStart.pas</Transaction>
+    <Transaction>2017/07/10 01:58:09.000.778,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\Unit2.dfm=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\uCustomStart.dfm</Transaction>
     <Transaction>2017/07/10 22:40:56.000.799,=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\Unit2.pas</Transaction>
     <Transaction>2017/07/10 22:41:12.000.734,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\uPriority.dfm=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\Unit2.dfm</Transaction>
     <Transaction>2017/07/10 22:41:12.000.734,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\uPriority.pas=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\Unit2.pas</Transaction>
     <Transaction>2017/07/23 18:56:43.000.878,=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\Extras\Rust.ttf</Transaction>
     <Transaction>2017/07/23 19:02:52.000.982,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\Extras\Rust.ttf=</Transaction>
     <Transaction>2017/08/02 15:23:48.000.026,=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\Unit1.pas</Transaction>
-    <Transaction>2017/08/02 15:23:58.000.245,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\uUpdater.pas=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\Unit1.pas</Transaction>
     <Transaction>2017/08/02 15:23:58.000.245,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\uUpdater.dfm=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\Unit1.dfm</Transaction>
+    <Transaction>2017/08/02 15:23:58.000.245,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\uUpdater.pas=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\Unit1.pas</Transaction>
     <Transaction>2017/08/02 15:25:43.000.955,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\uUpdater.pas=</Transaction>
     <Transaction>2017/08/02 21:42:34.000.711,=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\Unit1.pas</Transaction>
-    <Transaction>2017/08/02 21:42:41.000.245,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\Unit1.pas=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\uUpnp.pas</Transaction>
     <Transaction>2017/08/02 21:42:41.000.245,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\Unit1.dfm=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\uUpnp.dfm</Transaction>
+    <Transaction>2017/08/02 21:42:41.000.245,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\Unit1.pas=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\uUpnp.pas</Transaction>
+    <Transaction>2017/08/25 22:38:57.224,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\uPriority.pas=</Transaction>
   </Transactions>
 </BorlandProject>

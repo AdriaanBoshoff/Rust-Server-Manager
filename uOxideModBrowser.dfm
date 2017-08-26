@@ -11,6 +11,7 @@ object frmoxidemodbrowser: Tfrmoxidemodbrowser
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  Position = poMainFormCenter
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 19
@@ -28,7 +29,6 @@ object frmoxidemodbrowser: Tfrmoxidemodbrowser
     Font.Style = []
     ParentFont = False
     TabOrder = 0
-    ExplicitTop = 568
     DesignSize = (
       884
       70)

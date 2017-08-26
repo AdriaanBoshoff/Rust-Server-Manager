@@ -31,9 +31,9 @@ uses
   IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
   Vcl.Styles.Utils.SysControls, Vcl.Styles,
   uVclStylesEQU, uMultiDownloader, Vcl.OleCtrls, SHDocVw, uOxideModBrowser,
-  uWelcome, Vcl.CheckLst, uPluginEnableDisable, uDownload, uCustomStart, uPriority,
+  uWelcome, Vcl.CheckLst, uPluginEnableDisable, uDownload, uCustomStart,
   Vcl.AppAnalytics, System.Win.TaskbarCore, Vcl.Taskbar, Vcl.JumpList,
-  Vcl.WinXCtrls, Vcl.Menus, oleAuto, ActiveX, uUpnp;
+  Vcl.WinXCtrls, Vcl.Menus, oleAuto, ActiveX, uUpnp, System.Notification;
 
 type
   Tfrmmain = class(TForm)
@@ -217,6 +217,9 @@ type
     Stop1: TMenuItem;
     BackupNow1: TMenuItem;
     N1: TMenuItem;
+    ntfctncntr1: TNotificationCenter;
+    lbl7: TLabel;
+    tglswtchscientist: TToggleSwitch;
     procedure btncancelClick(Sender: TObject);
     function KillTask(ExeFileName: string): Integer;
     procedure btninstalloxidemodClick(Sender: TObject);
@@ -316,11 +319,12 @@ type
     procedure Start1Click(Sender: TObject);
     procedure Stop1Click(Sender: TObject);
     procedure BackupNow1Click(Sender: TObject);
+    procedure mmoinstallerChange(Sender: TObject);
   private
     { Private declarations }
     //Server Options variables
     globalchat, pve, stability, aithink, radiation, eac, vac: string;
-    aimove, instantcraft, antihack, decay, rconweb: string;
+    aimove, instantcraft, antihack, decay, rconweb, scientist: string;
   public
     { Public declarations }
     ini_settings, ini_RSMsettings, Branch: String;
@@ -1186,7 +1190,8 @@ begin
         commands.Add('+ai.move ' + aimove + ' ^');
         commands.Add('+craft.instant ' + instantcraft + ' ^');
         commands.Add('+antihack.enabled ' + antihack + ' ^');
-        commands.Add('+decay.scale ' + decay);
+        commands.Add('+decay.scale ' + decay + ' ^');
+        commands.Add('+nav_grid ' + scientist);
 
         if chkautorestart.Checked then
           begin
@@ -1437,6 +1442,17 @@ begin
       begin
         ini.WriteString('ServerSettings', 'decay', '0');
         decay := '0';
+      end;
+
+      if tglswtchscientist.State = tssOn then
+      begin
+        ini.WriteString('ServerSettings', 'scientist', '1');
+        scientist := '1';
+      end
+      else
+      begin
+        ini.WriteString('ServerSettings', 'scientist', '0');
+        scientist := '0';
       end;
 
     finally
@@ -1937,6 +1953,29 @@ begin
   end;
 end;
 
+procedure Tfrmmain.mmoinstallerChange(Sender: TObject);
+var
+  lineNumber: integer;
+  MyNotification: TNotification;
+begin
+  for lineNumber := 0 to mmoinstaller.lines.count-1 do
+    if Pos( 'Done', mmoinstaller.lines[lineNumber] ) > 0 then
+      begin
+        dscmnd1.Stop;
+
+        MyNotification := ntfctncntr1.CreateNotification;
+        try
+          MyNotification.Name := 'WindowsNotification';
+          MyNotification.Title := 'Rust Server Manager (Server Installer)';
+          MyNotification.AlertBody := 'The server has been installed / updater / validated';
+
+          ntfctncntr1.PresentNotification(MyNotification);
+        finally
+          MyNotification.Free;
+        end;
+      end;
+end;
+
 procedure Tfrmmain.LoadRSMsettings;
 var
   ini: TIniFile;
@@ -2127,6 +2166,11 @@ begin
       else
         tglswtchdecay.State := tssOff;
 
+      scientist := ini.ReadString('ServerSettings', 'scientist', '0');
+      if scientist = '1' then
+        tglswtchscientist.State := tssOn
+      else
+        tglswtchscientist.State := tssOff;
 
       tmrrefreshlatestversion.Enabled := chkchecklatestversion.Checked;
 

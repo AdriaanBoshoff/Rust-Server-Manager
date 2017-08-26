@@ -176,9 +176,6 @@
         <DCCReference Include="uCustomStart.pas">
             <Form>frmcustomstart</Form>
         </DCCReference>
-        <DCCReference Include="uPriority.pas">
-            <Form>frmpriority</Form>
-        </DCCReference>
         <DCCReference Include="uUpnp.pas">
             <Form>frmupnp</Form>
             <FormType>dfm</FormType>

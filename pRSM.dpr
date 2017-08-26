@@ -22,7 +22,6 @@ uses
   uPluginEnableDisable in 'uPluginEnableDisable.pas' {frmpluginenabledisable},
   uDownload in 'uDownload.pas' {frmextradownload},
   uCustomStart in 'uCustomStart.pas' {frmcustomstart},
-  uPriority in 'uPriority.pas' {frmpriority},
   uUpnp in 'uUpnp.pas' {frmupnp};
 
 {$R *.res}
@@ -44,7 +43,6 @@ begin
   Application.CreateForm(Tfrmpluginenabledisable, frmpluginenabledisable);
   Application.CreateForm(Tfrmextradownload, frmextradownload);
   Application.CreateForm(Tfrmcustomstart, frmcustomstart);
-  Application.CreateForm(Tfrmpriority, frmpriority);
   Application.CreateForm(Tfrmupnp, frmupnp);
   Application.Title := 'Rust Server Manager';
   Application.Run;
