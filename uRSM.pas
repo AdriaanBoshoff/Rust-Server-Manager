@@ -83,17 +83,16 @@ type
     lbledtserverip: TLabeledEdit;
     btnwipeserver: TButton;
     tsplugins: TTabSheet;
-    lbl14: TLabel;
+    lblplugins: TLabel;
     lbl15: TLabel;
     pnl3: TPanel;
     btnrefreshplugins: TButton;
-    btn16: TButton;
+    btnuniversalplugins: TButton;
     lbl4: TLabel;
-    lblplugincount: TLabel;
     tsbackup: TTabSheet;
     lbledtbackuppath: TLabeledEdit;
     btnselectbackuppath: TButton;
-    lbl16: TLabel;
+    lblbackupinterval: TLabel;
     sedbackup: TSpinEdit;
     btnstartbackup: TButton;
     btnstopbackup: TButton;
@@ -103,14 +102,14 @@ type
     dscmndbackup: TDosCommand;
     lbl17: TLabel;
     tmrnextbackup: TTimer;
-    btn13: TButton;
+    btnrustplugins: TButton;
     lbl18: TLabel;
     lbl19: TLabel;
     btnbackupnow: TButton;
     lbl20: TLabel;
     lbledtrconip: TLabeledEdit;
-    btn18: TButton;
-    btn19: TButton;
+    btnpluginsfolder: TButton;
+    btnconfigfolder: TButton;
     lblinstallerlog: TLabel;
     btnconnect: TButton;
     tssettings: TTabSheet;
@@ -128,7 +127,7 @@ type
     chkloadcustomtheme: TCheckBox;
     sedsaveinterval: TSpinEdit;
     lblsaveinterval: TLabel;
-    btn28: TButton;
+    btnoxidebrowser: TButton;
     grpserversettings: TGroupBox;
     chkchecklatestversion: TCheckBox;
     tmrrefreshlatestversion: TTimer;
@@ -136,7 +135,7 @@ type
     chklstconfigs: TCheckListBox;
     chklstplugins: TCheckListBox;
     chklstdata: TCheckListBox;
-    btn14: TButton;
+    btndeleteplugins: TButton;
     lbl24: TLabel;
     lbl25: TLabel;
     tswelcome: TTabSheet;
@@ -157,7 +156,6 @@ type
     btn26: TButton;
     btnenabledisableplugins: TButton;
     btncustomstart: TButton;
-    apnlytcs1: TAppAnalytics;
     lbl33: TLabel;
     lbl34: TLabel;
     lbl35: TLabel;
@@ -241,7 +239,7 @@ type
     procedure lbl11Click(Sender: TObject);
     procedure btn11Click(Sender: TObject);
     procedure btnwipeserverClick(Sender: TObject);
-    procedure btn16Click(Sender: TObject);
+    procedure btnuniversalpluginsClick(Sender: TObject);
     procedure ListFileDir(Path: string; FileList: TStrings);
     procedure btnrefreshpluginsClick(Sender: TObject);
     procedure btnselectbackuppathClick(Sender: TObject);
@@ -250,12 +248,12 @@ type
     function CopyPaste(xSourcePath, xDestPath, xPara: string): Boolean;
     procedure tmrbackupTimer(Sender: TObject);
     procedure tmrnextbackupTimer(Sender: TObject);
-    procedure btn13Click(Sender: TObject);
+    procedure btnrustpluginsClick(Sender: TObject);
     procedure btnbackupnowClick(Sender: TObject);
     procedure lbl20Click(Sender: TObject);
-    procedure btn18Click(Sender: TObject);
+    procedure btnpluginsfolderClick(Sender: TObject);
     procedure OpenFolder(Folder: string);
-    procedure btn19Click(Sender: TObject);
+    procedure btnconfigfolderClick(Sender: TObject);
     procedure btnconnectClick(Sender: TObject);
     procedure cbbthemelistChange(Sender: TObject);
     procedure btn21Click(Sender: TObject);
@@ -268,12 +266,12 @@ type
     procedure lbl34Click(Sender: TObject);
     procedure MultiDownloader(link: string);
     procedure lbl36Click(Sender: TObject);
-    procedure btn28Click(Sender: TObject);
+    procedure btnoxidebrowserClick(Sender: TObject);
     procedure tmrrefreshlatestversionTimer(Sender: TObject);
     procedure btnpluginupdaterClick(Sender: TObject);
     procedure chklstconfigsDblClick(Sender: TObject);
     procedure chklstdataDblClick(Sender: TObject);
-    procedure btn14Click(Sender: TObject);
+    procedure btndeletepluginsClick(Sender: TObject);
     procedure LoadRSMsettings;
     procedure lbl24Click(Sender: TObject);
     procedure lbl25Click(Sender: TObject);
@@ -376,12 +374,12 @@ begin
   frmwipe.ShowModal;
 end;
 
-procedure Tfrmmain.btn13Click(Sender: TObject);
+procedure Tfrmmain.btnrustpluginsClick(Sender: TObject);
 begin
   OpenURL('http://oxidemod.org/plugins/categories/rust.24/?order=rating_weighted');
 end;
 
-procedure Tfrmmain.btn14Click(Sender: TObject);
+procedure Tfrmmain.btndeletepluginsClick(Sender: TObject);
 var
   i_data, i_plugins, i_configs: Integer;
 begin
@@ -455,7 +453,7 @@ begin
   ListFileDir('.\server\' + activeserver + '\oxide\plugins\', chklstplugins.Items);
   ListFileDir('.\server\' + activeserver + '\oxide\config\', chklstconfigs.Items);
   ListFileDir('.\server\' + activeserver + '\oxide\data\', chklstdata.Items);
-  lblplugincount.Caption := '[' + IntToStr(chklstplugins.Items.Count) + ']';
+  lblplugins.Caption := 'Plugins: [' + IntToStr(chklstplugins.Items.Count) + ']';
 end;
 
 procedure Tfrmmain.ConnecttoServer1Click(Sender: TObject);
@@ -589,7 +587,7 @@ begin
   btnenabledisableplugins.Click;
 end;
 
-procedure Tfrmmain.btn16Click(Sender: TObject);
+procedure Tfrmmain.btnuniversalpluginsClick(Sender: TObject);
 begin
   OpenURL('http://oxidemod.org/plugins/categories/universal.58/');
 end;
@@ -614,12 +612,12 @@ begin
     ShowMessage('You need to select a path!');
 end;
 
-procedure Tfrmmain.btn18Click(Sender: TObject);
+procedure Tfrmmain.btnpluginsfolderClick(Sender: TObject);
 begin
   OpenFolder('.\server\' + serveridentity + '\oxide\plugins');
 end;
 
-procedure Tfrmmain.btn19Click(Sender: TObject);
+procedure Tfrmmain.btnconfigfolderClick(Sender: TObject);
 begin
   OpenFolder('.\server\' + serveridentity + '\oxide\config');
 end;
@@ -966,7 +964,7 @@ begin
   btnrefreshplugins.Click;
 end;
 
-procedure Tfrmmain.btn28Click(Sender: TObject);
+procedure Tfrmmain.btnoxidebrowserClick(Sender: TObject);
 begin
   frmoxidemodbrowser.Show;
 end;
@@ -1150,12 +1148,7 @@ end;
 procedure Tfrmmain.btnstartserverClick(Sender: TObject);
 var
   commands: TStringList;
-  priority: string;
 begin
-  {priority := SelectPriority;
-
-  if frmpriority.CanStart = True then
-    begin                      }
       commands := TStringList.Create;
       try
         commands.Add('@echo off');
@@ -1213,8 +1206,6 @@ begin
 
       lstservers.Clear;
       GetDirList('.\server');
-    //end;
-
 end;
 
 procedure Tfrmmain.btn7Click(Sender: TObject);
@@ -1810,7 +1801,7 @@ end;
 
 procedure Tfrmmain.lbl9Click(Sender: TObject);
 begin
-  OpenURL('https://inforcer25.co.za/forum');
+  OpenURL('http://oxidemod.org/resources/rust-server-manager.2494/');
 end;
 
 procedure Tfrmmain.lbledtserveridentityKeyPress(Sender: TObject; var Key: Char);
