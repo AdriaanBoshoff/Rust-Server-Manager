@@ -14,8 +14,8 @@ Rust Server Manager is now back on github.
 
 <h2>Links</h2>
 <ul>
-  <li><a href="http://oxidemod.org/resources/rust-server-manager.2494/">RSM on OxideMod</a></li>
-  <li><a href="https://inforcer25.co.za/">Official Website</a></li>
+  <li><a href="http://oxidemod.org/resources/rust-server-manager.2494/">RSM on OxideMod (Download)</a></li>
+  <li><a href="https://inforcer25.co.za/">Official Website (Download)</a></li>
 </ul>
 
 <h2>Extra Components</h2>
