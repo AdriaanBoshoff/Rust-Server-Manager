@@ -27,6 +27,19 @@ object frmcustomstart: Tfrmcustomstart
     DesignSize = (
       559
       37)
+    object lbl1: TLabel
+      Left = 16
+      Top = 10
+      Width = 372
+      Height = 16
+      Caption = 'You must add +oxide.directory "server/my_server_identity/oxide"'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
     object btn1: TButton
       Left = 405
       Top = 6

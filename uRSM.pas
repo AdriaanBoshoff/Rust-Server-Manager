@@ -51,7 +51,6 @@ type
     dscmnd1: TDosCommand;
     btnstartserver: TButton;
     lbledtservername: TLabeledEdit;
-    rgserverlevel: TRadioGroup;
     lbledtserverport: TLabeledEdit;
     lbledtrconport: TLabeledEdit;
     lbledtserverdescription: TLabeledEdit;
@@ -218,6 +217,12 @@ type
     ntfctncntr1: TNotificationCenter;
     lbl7: TLabel;
     tglswtchscientist: TToggleSwitch;
+    grpmap: TGroupBox;
+    cbbmap: TComboBox;
+    lbl8: TLabel;
+    tglswtchbradley: TToggleSwitch;
+    lbl10: TLabel;
+    tglswtchnavwait: TToggleSwitch;
     procedure btncancelClick(Sender: TObject);
     function KillTask(ExeFileName: string): Integer;
     procedure btninstalloxidemodClick(Sender: TObject);
@@ -322,7 +327,8 @@ type
     { Private declarations }
     //Server Options variables
     globalchat, pve, stability, aithink, radiation, eac, vac: string;
-    aimove, instantcraft, antihack, decay, rconweb, scientist: string;
+    aimove, instantcraft, antihack, decay, rconweb, scientist, bradley: string;
+    nav_wait: string;
   public
     { Public declarations }
     ini_settings, ini_RSMsettings, Branch: String;
@@ -1184,7 +1190,9 @@ begin
         commands.Add('+craft.instant ' + instantcraft + ' ^');
         commands.Add('+antihack.enabled ' + antihack + ' ^');
         commands.Add('+decay.scale ' + decay + ' ^');
-        commands.Add('+nav_grid ' + scientist);
+        commands.Add('+nav_grid ' + scientist + ' ^');
+        commands.Add('+bradley.enabled ' + bradley + ' ^');
+        commands.Add('+nav_wait ' + nav_wait);
 
         if chkautorestart.Checked then
           begin
@@ -1267,20 +1275,20 @@ begin
     rconip := lbledtrconip.Text;
     saveinterval := IntToStr(sedsaveinterval.Value);
     tickrate := sedtickrate.Value;
-    if rgserverlevel.ItemIndex = -1 then
+    if cbbmap.ItemIndex = -1 then
       ShowMessage
         ('Error: You need to select a map! The config was still saved but you may get errors');
-    if rgserverlevel.ItemIndex = 0 then
+    if cbbmap.ItemIndex = 0 then
       maptype := 'Procedural Map';
-    if rgserverlevel.ItemIndex = 1 then
+    if cbbmap.ItemIndex = 1 then
       maptype := 'Barren';
-    if rgserverlevel.ItemIndex = 2 then
+    if cbbmap.ItemIndex = 2 then
       maptype := 'HapisIsland';
-    if rgserverlevel.ItemIndex = 3 then
+    if cbbmap.ItemIndex = 3 then
       maptype := 'SavasIslandp';
-    if rgserverlevel.ItemIndex = 4 then
+    if cbbmap.ItemIndex = 4 then
       maptype := 'SavasIsland_koth';
-    if rgserverlevel.ItemIndex = 5 then
+    if cbbmap.ItemIndex = 5 then
       maptype := 'CraggyIsland';
 
     ini := TIniFile.Create(ini_settings);
@@ -1444,6 +1452,28 @@ begin
       begin
         ini.WriteString('ServerSettings', 'scientist', '0');
         scientist := '0';
+      end;
+
+      if tglswtchbradley.State = tssOn then
+      begin
+        ini.WriteString('ServerSettings', 'bradley', '1');
+        bradley := '1';
+      end
+      else
+      begin
+        ini.WriteString('ServerSettings', 'bradley', '0');
+        bradley := '0';
+      end;
+
+      if tglswtchnavwait.State = tssOn then
+      begin
+        ini.WriteString('ServerSettings', 'nav_wait', '1');
+        nav_wait := '1';
+      end
+      else
+      begin
+        ini.WriteString('ServerSettings', 'nav_wait', '0');
+        nav_wait := '0';
       end;
 
     finally
@@ -1853,7 +1883,7 @@ begin
     lbledtserverport.EditLabel.Caption := ini.ReadString('Server Config TAB', 'Server Port', 'Server Port:');
     lbledtrconport.EditLabel.Caption := ini.ReadString('Server Config TAB', 'Rcon Port', 'Rcon Port:');
     btnsaveconfig.Caption := ini.ReadString('Server Config TAB', 'Save Config', 'Save Config:');
-    rgserverlevel.Caption := ini.ReadString('Server Config TAB', 'Map Type', 'Map Type:');
+    grpmap.Caption := ini.ReadString('Server Config TAB', 'Map Type', 'Map Type:');
     grpserversettings.Caption := ini.ReadString('Server Config TAB', 'More Server Settings', 'More Server Settings:');
 
     //Server Installer
@@ -1949,22 +1979,27 @@ var
   lineNumber: integer;
   MyNotification: TNotification;
 begin
-  for lineNumber := 0 to mmoinstaller.lines.count-1 do
-    if Pos( 'Done', mmoinstaller.lines[lineNumber] ) > 0 then
-      begin
-        dscmnd1.Stop;
+  {$IFDEF MSWINDOWS}
+  if TOSVersion.Check(6, 2) then
+    begin
+      for lineNumber := 0 to mmoinstaller.lines.count-1 do
+        if Pos( 'Done', mmoinstaller.lines[lineNumber] ) > 0 then
+          begin
+            dscmnd1.Stop;
 
-        MyNotification := ntfctncntr1.CreateNotification;
-        try
-          MyNotification.Name := 'WindowsNotification';
-          MyNotification.Title := 'Rust Server Manager (Server Installer)';
-          MyNotification.AlertBody := 'The server has been installed / updater / validated';
+            MyNotification := ntfctncntr1.CreateNotification;
+            try
+              MyNotification.Name := 'WindowsNotification';
+              MyNotification.Title := 'Rust Server Manager (Server Installer)';
+              MyNotification.AlertBody := 'The server has been installed / updater / validated';
 
-          ntfctncntr1.PresentNotification(MyNotification);
-        finally
-          MyNotification.Free;
-        end;
-      end;
+              ntfctncntr1.PresentNotification(MyNotification);
+            finally
+              MyNotification.Free;
+            end;
+          end;
+    end;
+  {$ENDIF MSWINDOWS}
 end;
 
 procedure Tfrmmain.LoadRSMsettings;
@@ -2073,17 +2108,17 @@ begin
       sedsaveinterval.Value := StrToInt(saveinterval);
       sedtickrate.Value := tickrate;
       if maptype = 'Procedural Map' then
-        rgserverlevel.ItemIndex := 0;
+        cbbmap.ItemIndex := 0;
       if maptype = 'Barren' then
-        rgserverlevel.ItemIndex := 1;
+        cbbmap.ItemIndex := 1;
       if maptype = 'HapisIsland' then
-        rgserverlevel.ItemIndex := 2;
+        cbbmap.ItemIndex := 2;
       if maptype = 'SavasIslandp' then
-        rgserverlevel.ItemIndex := 3;
+        cbbmap.ItemIndex := 3;
       if maptype = 'SavasIsland_koth' then
-        rgserverlevel.ItemIndex := 4;
+        cbbmap.ItemIndex := 4;
       if maptype = 'CraggyIsland' then
-        rgserverlevel.ItemIndex := 5;
+        cbbmap.ItemIndex := 5;
 
       rconweb := ini.ReadString('ServerSettings', 'rconweb', '1');
       if rconweb = '1' then
@@ -2162,6 +2197,18 @@ begin
         tglswtchscientist.State := tssOn
       else
         tglswtchscientist.State := tssOff;
+
+      bradley := ini.ReadString('ServerSettings', 'bradley', '1');
+      if bradley = '1' then
+        tglswtchbradley.State := tssOn
+      else
+        tglswtchbradley.State := tssOff;
+
+      nav_wait := ini.ReadString('ServerSettings', 'nav_wait', '0');
+      if nav_wait = '1' then
+        tglswtchnavwait.State := tssOn
+      else
+        tglswtchnavwait.State := tssOff;
 
       tmrrefreshlatestversion.Enabled := chkchecklatestversion.Checked;
 

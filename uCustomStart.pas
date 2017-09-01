@@ -12,6 +12,7 @@ type
     btn2: TButton;
     pnl1: TPanel;
     mmo1: TMemo;
+    lbl1: TLabel;
     procedure FormShow(Sender: TObject);
     procedure btn1Click(Sender: TObject);
   private
