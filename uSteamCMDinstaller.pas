@@ -3,29 +3,23 @@ unit uSteamCMDinstaller;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
-  System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,
-  Vcl.ComCtrls, IdComponent,
-  IdTCPConnection, IdTCPClient, IdHTTP, System.Zip;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, IdBaseComponent, IdComponent,
+  IdTCPConnection, IdTCPClient, IdHTTP, System.Zip, ActiveX, IdSSLOpenSSL;
 
 type
 
   TDownload = class;
 
   Tfrmsteamcmdinstaller = class(TForm)
-    lbl1: TLabel;
     pb1: TProgressBar;
-    btn1: TButton;
-    btn2: TButton;
-    lblstatus: TLabel;
-    procedure btn2Click(Sender: TObject);
-    procedure btn1Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
     { Public declarations }
   end;
+
 
   TDownload = class(TThread)
   private
@@ -55,28 +49,14 @@ implementation
 
 {$R *.dfm}
 
-procedure Tfrmsteamcmdinstaller.btn1Click(Sender: TObject);
-var
-  DownloadThread: TDownload;
-  link: string;
-begin
-  link := 'http://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip';
-  DownloadThread := TDownload.Create(true, link, 'steamcmd.zip');
-  DownloadThread.FreeOnTerminate := true;
-  DownloadThread.Start;
-end;
-
-procedure Tfrmsteamcmdinstaller.btn2Click(Sender: TObject);
-begin
-  Close;
-end;
-
-{ TDownload }
+{ Thread }
 
 constructor TDownload.Create(CreateSuspended: boolean; aurl, afilename: string);
 begin
   inherited Create(CreateSuspended);
   httpclient := TIdHTTP.Create(nil);
+  httpclient.IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(httpclient);
+  httpclient.HandleRedirects := True;
   httpclient.OnWorkBegin := idhttp1WorkBegin;
   httpclient.OnWork := idhttp1Work;
   url := aurl;
@@ -106,41 +86,11 @@ begin
   try
     httpclient.Get(url, Stream);
     Stream.SaveToFile(filename);
+    frmsteamcmdinstaller.Caption := 'Done Downloading. Extracting...';
+    ForceDirectories('.\steamcmd');
+    ExtractZip('steamcmd.zip', '.\steamcmd');
   finally
     Stream.Free;
-  end;
-end;
-
-procedure TDownload.ExtractZip(ZipFile, ExtractPath: string);
-begin
-  if DirectoryExists('.\steamcmd') then
-  begin
-    if TZipFile.IsValid(ZipFile) then
-    begin
-      TZipFile.ExtractZipFile(ZipFile, ExtractPath);
-      frmsteamcmdinstaller.lblstatus.Caption := 'SteamCMD Installed!';
-      DeleteFile(ZipFile);
-    end
-    else
-    begin
-      ShowMessage('Error installing...!');
-      frmsteamcmdinstaller.lblstatus.Caption := 'Error Installing ...!';
-    end;
-  end
-  else
-  begin
-    MkDir('.\steamcmd');
-    if TZipFile.IsValid(ZipFile) then
-    begin
-      TZipFile.ExtractZipFile(ZipFile, ExtractPath);
-      frmsteamcmdinstaller.lblstatus.Caption := 'SteamCMD Installed!';
-      DeleteFile(ZipFile);
-    end
-    else
-    begin
-      ShowMessage('Error installing...!');
-      frmsteamcmdinstaller.lblstatus.Caption := 'Error Installing ...!';
-    end;
   end;
 end;
 
@@ -149,14 +99,7 @@ var
   ZipFile: string;
 begin
   frmsteamcmdinstaller.pb1.Position := progressbarstatus;
-  frmsteamcmdinstaller.lblstatus.Caption := 'Downloading...';
-
-  if frmsteamcmdinstaller.pb1.Position = frmsteamcmdinstaller.pb1.Max then
-  begin
-    frmsteamcmdinstaller.lblstatus.Caption := 'Done Downloading. Installing...';
-    Sleep(2000);
-    ExtractZip('steamcmd.zip', '.\steamcmd');
-  end;
+  frmsteamcmdinstaller.Caption := 'Downloading...';
 end;
 
 procedure TDownload.SetMaxProgressBar;
@@ -168,6 +111,35 @@ destructor TDownload.Destroy;
 begin
   FreeAndNil(httpclient);
   inherited Destroy;
+end;
+
+procedure TDownload.ExtractZip(ZipFile, ExtractPath: string);
+begin
+  if TZipFile.IsValid(ZipFile) then
+  begin
+    TZipFile.ExtractZipFile(ZipFile, ExtractPath);
+    DeleteFile(ZipFile);
+    frmsteamcmdinstaller.Caption := 'Done.';
+    frmsteamcmdinstaller.Close;
+  end
+  else
+  begin
+    ShowMessage('There was some unknown error while downloading or extracting the files.');
+    frmsteamcmdinstaller.Close;
+  end;
+end;
+
+procedure Tfrmsteamcmdinstaller.FormShow(Sender: TObject);
+  var
+  DownloadThread: TDownload;
+  link: string;
+begin
+  pb1.Position := 0;
+  frmsteamcmdinstaller.Caption := 'Starting Download...';
+  link := 'https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip';
+  DownloadThread := TDownload.Create(true, link, 'steamcmd.zip');
+  DownloadThread.FreeOnTerminate := true;
+  DownloadThread.Start;
 end;
 
 end.

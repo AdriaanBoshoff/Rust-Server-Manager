@@ -58,6 +58,7 @@ constructor TDownload.Create(CreateSuspended: boolean; aurl, afilename: string);
 begin
   inherited Create(CreateSuspended);
   httpclient := TIdHTTP.Create(nil);
+  httpclient.Request.UserAgent := 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; SLCC1';
   httpclient.IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(httpclient);
   httpclient.HandleRedirects := True;
   httpclient.OnWorkBegin := idhttp1WorkBegin;
@@ -71,7 +72,6 @@ procedure TDownload.idhttp1Work(ASender: TObject; AWorkMode: TWorkMode;
 begin
   progressbarstatus := AWorkCount;
   Queue(UpdateProgressBar);
-
 end;
 
 procedure TDownload.idhttp1WorkBegin(ASender: TObject; AWorkMode: TWorkMode;
@@ -90,7 +90,6 @@ begin
     httpclient.Get(url, Stream);
     Stream.SaveToFile(filename);
     frmoxidemodinstaller.Caption := 'Done Downloading. Extracting...';
-    //Sleep(2000);
     ExtractZip('oxide.zip', GetCurrentDir);
   finally
     Stream.Free;
@@ -103,13 +102,6 @@ var
 begin
   frmoxidemodinstaller.pb1.Position := progressbarstatus;
   frmoxidemodinstaller.Caption := 'Downloading...';
-
- { if frmextradownload.pb1.Position = frmextradownload.pb1.Max then
-  begin
-    frmextradownload.Caption := 'Done Downloading. Extracting...';
-    Sleep(2000);
-    ExtractZip('files.zip', GetCurrentDir);
-  end; }
 end;
 
 procedure TDownload.SetMaxProgressBar;
@@ -129,10 +121,6 @@ begin
   begin
     TZipFile.ExtractZipFile(ZipFile, ExtractPath);
     DeleteFile(ZipFile);
-    DeleteFile('HashInfo.txt');
-    DeleteFile('OpenSSL License.txt');
-    DeleteFile('openssl.exe');
-    DeleteFile('ReadMe.txt');
     frmoxidemodinstaller.Caption := 'Done.';
     frmoxidemodinstaller.btn1.Enabled := True;
   end
@@ -155,7 +143,7 @@ begin
   pb1.Position := 0;
   btn1.Enabled := False;
   frmoxidemodinstaller.Caption := 'Starting Download...';
-  link := 'https://bintray.com/oxidemod/builds/download_file?file_path=Oxide-Rust.zip';
+  link := 'https://www.github.com/OxideMod/Oxide/releases/download/latest/Oxide-Rust.zip';
   DownloadThread := TDownload.Create(true, link, 'oxide.zip');
   DownloadThread.FreeOnTerminate := true;
   DownloadThread.Start;

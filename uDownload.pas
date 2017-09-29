@@ -135,7 +135,7 @@ end;
 
 procedure Tfrmextradownload.btn1Click(Sender: TObject);
 begin
-  Close;
+  Hide;
 end;
 
 procedure Tfrmextradownload.FormShow(Sender: TObject);

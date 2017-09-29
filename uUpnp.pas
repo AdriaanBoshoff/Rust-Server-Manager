@@ -104,6 +104,7 @@ end;
 procedure Tfrmupnp.FormShow(Sender: TObject);
 begin
   mmo1.Clear;
+  Sleep(1000);
   ListUPnPEntries;
 end;
 

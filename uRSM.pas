@@ -28,12 +28,11 @@ uses
   ShellAPI, WinSock,
   uServerDescription, uServerWipe, uPluginConfigEditor, FileCtrl, Vcl.Themes,
   WinInet, IdHTTP,
-  IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
-  Vcl.Styles.Utils.SysControls, Vcl.Styles,
-  uVclStylesEQU, uMultiDownloader, Vcl.OleCtrls, SHDocVw, uOxideModBrowser,
+  IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, Vcl.Styles,
+  uMultiDownloader, Vcl.OleCtrls, SHDocVw, uOxideModBrowser,
   uWelcome, Vcl.CheckLst, uPluginEnableDisable, uDownload, uCustomStart,
   Vcl.AppAnalytics, System.Win.TaskbarCore, Vcl.Taskbar, Vcl.JumpList,
-  Vcl.WinXCtrls, Vcl.Menus, oleAuto, ActiveX, uUpnp, System.Notification;
+  Vcl.WinXCtrls, Vcl.Menus, oleAuto, ActiveX, System.Notification;
 
 type
   Tfrmmain = class(TForm)
@@ -122,7 +121,6 @@ type
     trckbrtransparency: TTrackBar;
     lblversion: TLabel;
     idhtp1: TIdHTTP;
-    btn22: TButton;
     chkloadcustomtheme: TCheckBox;
     sedsaveinterval: TSpinEdit;
     lblsaveinterval: TLabel;
@@ -187,7 +185,6 @@ type
     btn8: TButton;
     btn9: TButton;
     lbl2: TLabel;
-    btn4: TButton;
     lblserveridentity: TLabel;
     lbl3: TLabel;
     pmserverlist: TPopupMenu;
@@ -265,7 +262,6 @@ type
     procedure trckbrtransparencyChange(Sender: TObject);
     function IsConnected: Boolean;
     function GetLatesVersion: string;
-    procedure btn22Click(Sender: TObject);
     procedure lbl27Click(Sender: TObject);
     procedure lbl30Click(Sender: TObject);
     procedure lbl34Click(Sender: TObject);
@@ -290,7 +286,6 @@ type
     procedure FormActivate(Sender: TObject);
     procedure DownloadExtraFiles;
     procedure btncustomstartClick(Sender: TObject);
-    function SelectPriority: String;
     procedure btnupdateClick(Sender: TObject);
     procedure LoadLanguageFile;
     procedure MakeLanguageFile;
@@ -299,7 +294,6 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     function GetLocalIP: string;
-    procedure btn4Click(Sender: TObject);
     procedure pgc1Change(Sender: TObject);
     procedure lbl3Click(Sender: TObject);
     procedure MakeActive1Click(Sender: TObject);
@@ -322,7 +316,6 @@ type
     procedure Start1Click(Sender: TObject);
     procedure Stop1Click(Sender: TObject);
     procedure BackupNow1Click(Sender: TObject);
-    procedure mmoinstallerChange(Sender: TObject);
   private
     { Private declarations }
     //Server Options variables
@@ -925,11 +918,6 @@ begin
   end;
 end;
 
-procedure Tfrmmain.btn22Click(Sender: TObject);
-begin
-  FrmHueSat.ShowModal
-end;
-
 procedure Tfrmmain.btn23Click(Sender: TObject);
 begin
   OpenURL('https://twitter.com/inforcer25');
@@ -993,13 +981,6 @@ end;
 procedure Tfrmmain.btninstalloxidemodClick(Sender: TObject);
 begin
   frmoxidemodinstaller.ShowModal;
-end;
-
-procedure Tfrmmain.btn4Click(Sender: TObject);
-begin
-  frmupnp.serverport := serverport;
-  frmupnp.rconport := rconport;
-  frmupnp.ShowModal;
 end;
 
 procedure Tfrmmain.btnvalidateserverClick(Sender: TObject);
@@ -1574,17 +1555,6 @@ begin
   cbbthemelist.ItemIndex := cbbthemelist.Items.IndexOf
     (TStyleManager.ActiveStyle.Name);
 
-  { if DirectoryExists('.\server\' + activeserver) then
-    ini_settings := '.\server\' + activeserver + '\settings.ini'
-    else
-    begin
-    ForceDirectories('.\server\' + activeserver);
-    ini_settings := '.\server\' + activeserver + '\settings.ini';
-    lstservers.Clear;
-    GetDirList('.\server');
-    lblcurrentservers.Caption := 'Current Servers: [' + IntToStr(lstservers.Items.Count) + ']';
-    end; }
-
   if DirectoryExists('.\server\' + activeserver) then
     begin
       ini_settings := '.\server\' + activeserver + '\settings.ini';
@@ -1974,34 +1944,6 @@ begin
   end;
 end;
 
-procedure Tfrmmain.mmoinstallerChange(Sender: TObject);
-var
-  lineNumber: integer;
-  MyNotification: TNotification;
-begin
-  {$IFDEF MSWINDOWS}
-  if TOSVersion.Check(6, 2) then
-    begin
-      for lineNumber := 0 to mmoinstaller.lines.count-1 do
-        if Pos( 'Done', mmoinstaller.lines[lineNumber] ) > 0 then
-          begin
-            dscmnd1.Stop;
-
-            MyNotification := ntfctncntr1.CreateNotification;
-            try
-              MyNotification.Name := 'WindowsNotification';
-              MyNotification.Title := 'Rust Server Manager (Server Installer)';
-              MyNotification.AlertBody := 'The server has been installed / updater / validated';
-
-              ntfctncntr1.PresentNotification(MyNotification);
-            finally
-              MyNotification.Free;
-            end;
-          end;
-    end;
-  {$ENDIF MSWINDOWS}
-end;
-
 procedure Tfrmmain.LoadRSMsettings;
 var
   ini: TIniFile;
@@ -2277,22 +2219,6 @@ begin
   OpenURL('http://oxidemod.org/plugins/categories/rust.24/?order=rating_weighted');
 end;
 
-function Tfrmmain.SelectPriority: string;
-var
-  priority: Integer;
-begin
-  {frmpriority.ShowModal;
-  priority := frmpriority.option;
-
-  if priority = 0 then Result := '/LOW';
-  if priority = 1 then Result := '/NORMAL';
-  if priority = 2 then Result := '/HIGH';
-  if priority = 3 then Result := '/REALTIME';
-  if priority = 4 then Result := '/ABOVENORMAL';
-  if priority = 5 then Result := '/BELOWNORMAL';  }
-
-end;
-
 function Tfrmmain.SelectServerBranch: string;
 begin
   frminstalleroption.ShowModal;
@@ -2371,5 +2297,8 @@ procedure Tfrmmain.WipeOptions1Click(Sender: TObject);
 begin
   btnwipeserver.Click;
 end;
+
+initialization
+  ReportMemoryLeaksOnShutdown := True;
 
 end.
