@@ -27,9 +27,9 @@ object frmconfigeditor: Tfrmconfigeditor
       845
       62)
     object btn2: TButton
-      Left = 745
+      Left = 760
       Top = 6
-      Width = 94
+      Width = 79
       Height = 51
       Anchors = [akTop, akRight]
       Cancel = True
@@ -39,16 +39,16 @@ object frmconfigeditor: Tfrmconfigeditor
       OnClick = btn2Click
     end
     object btn3: TButton
-      Left = 14
+      Left = 6
       Top = 6
-      Width = 131
+      Width = 107
       Height = 51
       Caption = 'Font Settings'
       TabOrder = 1
       OnClick = btn3Click
     end
     object btn4: TButton
-      Left = 607
+      Left = 622
       Top = 6
       Width = 132
       Height = 51
@@ -58,9 +58,9 @@ object frmconfigeditor: Tfrmconfigeditor
       OnClick = btn4Click
     end
     object chktabs: TCheckBox
-      Left = 151
+      Left = 119
       Top = 6
-      Width = 209
+      Width = 98
       Height = 17
       Caption = 'Want Tabs'
       Checked = True
@@ -69,7 +69,7 @@ object frmconfigeditor: Tfrmconfigeditor
       OnClick = chktabsClick
     end
     object chkwordwrap: TCheckBox
-      Left = 151
+      Left = 119
       Top = 29
       Width = 98
       Height = 28
@@ -78,7 +78,7 @@ object frmconfigeditor: Tfrmconfigeditor
       OnClick = chkwordwrapClick
     end
     object chklinenumbers: TCheckBox
-      Left = 264
+      Left = 223
       Top = 6
       Width = 161
       Height = 17
@@ -89,24 +89,47 @@ object frmconfigeditor: Tfrmconfigeditor
       OnClick = chklinenumbersClick
     end
     object btn1: TButton
-      Left = 502
+      Left = 536
       Top = 6
-      Width = 99
+      Width = 80
       Height = 51
+      Anchors = [akTop, akRight]
       Caption = 'Search'
       TabOrder = 6
       OnClick = btn1Click
     end
-    object chkoverride: TCheckBox
-      Left = 264
-      Top = 29
-      Width = 202
+    object rbdark: TRadioButton
+      Left = 417
+      Top = 6
+      Width = 113
       Height = 28
-      Caption = 'Override Windows Theme'
-      Color = clWindow
-      ParentColor = False
+      Anchors = [akTop, akRight]
+      Caption = 'Dark Theme'
+      Checked = True
       TabOrder = 7
-      OnClick = chkoverrideClick
+      TabStop = True
+      OnClick = rbdarkClick
+    end
+    object rblight: TRadioButton
+      Left = 417
+      Top = 29
+      Width = 113
+      Height = 28
+      Anchors = [akTop, akRight]
+      Caption = 'Light Theme'
+      TabOrder = 8
+      OnClick = rblightClick
+    end
+    object chkhighlightline: TCheckBox
+      Left = 223
+      Top = 29
+      Width = 188
+      Height = 28
+      Caption = 'HighLight Current Line'
+      Checked = True
+      State = cbChecked
+      TabOrder = 9
+      OnClick = chkhighlightlineClick
     end
   end
   object synm1: TSynMemo
@@ -115,6 +138,8 @@ object frmconfigeditor: Tfrmconfigeditor
     Width = 845
     Height = 551
     Align = alClient
+    Color = clBtnText
+    ActiveLineColor = clTeal
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -13
@@ -129,15 +154,25 @@ object frmconfigeditor: Tfrmconfigeditor
     Gutter.RightOffset = 1
     Gutter.ShowLineNumbers = True
     Gutter.Gradient = True
-    Gutter.GradientStartColor = clBtnShadow
+    Gutter.GradientStartColor = 4473924
     Gutter.GradientEndColor = clBlack
-    Highlighter = synjsnsyn1
+    Highlighter = synjsnsyndark
+    Lines.Strings = (
+      '{'
+      '  "Closed Sign": "[#262626][[#red]CLOSED[/#]][/#]",'
+      '  "Notify About Closing": true,'
+      '  "Notify About New Tickets": true,'
+      '  "Notify About Replies": true,'
+      '  "Notify About Wipes": true,'
+      '  "Open Sign": "[#262626][[#C4FF00]OPEN[/#]][/#]",'
+      '  "Slack Channel": "general",'
+      '  "Title": "[#262626][[#C4FF00]Tickets[/#]][/#]",'
+      '  "Use Email API": false,'
+      '  "Use Push API": false,'
+      '  "Use Slack": false'
+      '}')
     WantTabs = True
-    FontSmoothing = fsmAntiAlias
-    ExplicitLeft = 352
-    ExplicitTop = 320
-    ExplicitWidth = 200
-    ExplicitHeight = 150
+    FontSmoothing = fsmClearType
   end
   object dlgFont1: TFontDialog
     Font.Charset = DEFAULT_CHARSET
@@ -148,16 +183,27 @@ object frmconfigeditor: Tfrmconfigeditor
     Left = 448
     Top = 272
   end
-  object synjsnsyn1: TSynJSONSyn
+  object synjsnsyndark: TSynJSONSyn
     Options.AutoDetectEnabled = False
     Options.AutoDetectLineLimit = 0
     Options.Visible = False
-    Left = 328
+    AttributeAttri.Foreground = clSkyBlue
+    ReservedAttri.Foreground = clMenuHighlight
+    SymbolAttri.Foreground = clWhite
+    ValueAttri.Foreground = clTeal
+    Left = 608
     Top = 200
   end
   object FindDialog1: TFindDialog
     OnFind = FindDialog1Find
     Left = 728
     Top = 240
+  end
+  object synjsnsynlight: TSynJSONSyn
+    Options.AutoDetectEnabled = False
+    Options.AutoDetectLineLimit = 0
+    Options.Visible = False
+    Left = 608
+    Top = 264
   end
 end

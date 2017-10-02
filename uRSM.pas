@@ -32,7 +32,7 @@ uses
   uMultiDownloader, Vcl.OleCtrls, SHDocVw, uOxideModBrowser,
   uWelcome, Vcl.CheckLst, uPluginEnableDisable, uDownload, uCustomStart,
   Vcl.AppAnalytics, System.Win.TaskbarCore, Vcl.Taskbar, Vcl.JumpList,
-  Vcl.WinXCtrls, Vcl.Menus, oleAuto, ActiveX, System.Notification;
+  Vcl.WinXCtrls, Vcl.Menus, oleAuto, ActiveX, System.Notification, uDataModule;
 
 type
   Tfrmmain = class(TForm)
@@ -220,6 +220,10 @@ type
     tglswtchbradley: TToggleSwitch;
     lbl10: TLabel;
     tglswtchnavwait: TToggleSwitch;
+    cLOSE1: TMenuItem;
+    lbl12: TLabel;
+    tglswtchnavdisable: TToggleSwitch;
+    apnlytcs1: TAppAnalytics;
     procedure btncancelClick(Sender: TObject);
     function KillTask(ExeFileName: string): Integer;
     procedure btninstalloxidemodClick(Sender: TObject);
@@ -316,12 +320,14 @@ type
     procedure Start1Click(Sender: TObject);
     procedure Stop1Click(Sender: TObject);
     procedure BackupNow1Click(Sender: TObject);
+    procedure cLOSE1Click(Sender: TObject);
+    procedure chklstpluginsDblClick(Sender: TObject);
   private
     { Private declarations }
-    //Server Options variables
+    // Server Options variables
     globalchat, pve, stability, aithink, radiation, eac, vac: string;
     aimove, instantcraft, antihack, decay, rconweb, scientist, bradley: string;
-    nav_wait: string;
+    nav_wait, nav_disable: string;
   public
     { Public declarations }
     ini_settings, ini_RSMsettings, Branch: String;
@@ -348,7 +354,7 @@ end;
 
 procedure Tfrmmain.ActiveServer1Click(Sender: TObject);
 begin
-  ShowMessage('The active server is ' + serveridentity);
+  // ShowMessage('The active server is ' + serveridentity);
 end;
 
 procedure Tfrmmain.BackupNow1Click(Sender: TObject);
@@ -392,7 +398,8 @@ begin
         begin
           if chklstdata.Checked[i_data] then
           begin
-            DeleteFile('.\server\' + serveridentity + '\oxide\data\' + chklstdata.Items.Strings[i_data]);
+            DeleteFile('.\server\' + serveridentity + '\oxide\data\' +
+              chklstdata.Items.Strings[i_data]);
           end;
         end;
 
@@ -400,8 +407,8 @@ begin
         begin
           if chklstplugins.Checked[i_plugins] then
           begin
-            DeleteFile('.\server\'+ serveridentity +'\oxide\plugins\' + chklstplugins.Items.Strings
-              [i_plugins]);
+            DeleteFile('.\server\' + serveridentity + '\oxide\plugins\' +
+              chklstplugins.Items.Strings[i_plugins]);
           end;
         end;
 
@@ -409,8 +416,8 @@ begin
         begin
           if chklstconfigs.Checked[i_configs] then
           begin
-            DeleteFile('.\server\' + serveridentity +  '\oxide\config\' + chklstconfigs.Items.Strings
-              [i_configs]);
+            DeleteFile('.\server\' + serveridentity + '\oxide\config\' +
+              chklstconfigs.Items.Strings[i_configs]);
           end;
         end;
 
@@ -449,10 +456,13 @@ begin
   chklstplugins.Clear;
   chklstconfigs.Clear;
   chklstdata.Clear;
-  ListFileDir('.\server\' + activeserver + '\oxide\plugins\', chklstplugins.Items);
-  ListFileDir('.\server\' + activeserver + '\oxide\config\', chklstconfigs.Items);
+  ListFileDir('.\server\' + activeserver + '\oxide\plugins\',
+    chklstplugins.Items);
+  ListFileDir('.\server\' + activeserver + '\oxide\config\',
+    chklstconfigs.Items);
   ListFileDir('.\server\' + activeserver + '\oxide\data\', chklstdata.Items);
-  lblplugins.Caption := 'Plugins: [' + IntToStr(chklstplugins.Items.Count) + ']';
+  lblplugins.Caption := 'Plugins: [' +
+    IntToStr(chklstplugins.Items.Count) + ']';
 end;
 
 procedure Tfrmmain.ConnecttoServer1Click(Sender: TObject);
@@ -514,14 +524,19 @@ procedure Tfrmmain.DeleteDirectory(const Name: string);
 var
   F: TSearchRec;
 begin
-  if FindFirst(Name + '\*', faAnyFile, F) = 0 then begin
+  if FindFirst(Name + '\*', faAnyFile, F) = 0 then
+  begin
     try
       repeat
-        if (F.Attr and faDirectory <> 0) then begin
-          if (F.Name <> '.') and (F.Name <> '..') then begin
+        if (F.Attr and faDirectory <> 0) then
+        begin
+          if (F.Name <> '.') and (F.Name <> '..') then
+          begin
             DeleteDirectory(Name + '\' + F.Name);
           end;
-        end else begin
+        end
+        else
+        begin
           DeleteFile(Name + '\' + F.Name);
         end;
       until FindNext(F) <> 0;
@@ -538,42 +553,46 @@ var
   ini: TIniFile;
 begin
   if lstservers.ItemIndex = -1 then
-    begin
-      ShowMessage('No server is selected!');
-    end
+  begin
+    ShowMessage('No server is selected!');
+  end
   else
-    begin
-      serv := lstservers.Items[lstservers.ItemIndex];
-      case MessageDlg('Are you sure you want to delete ' + serv + ' ? All server files like configs and plugins will be deleted for this server', mtConfirmation, [mbYes, mbCancel], 0) of
-        mrYes:
+  begin
+    serv := lstservers.Items[lstservers.ItemIndex];
+    case MessageDlg('Are you sure you want to delete ' + serv +
+      ' ? All server files like configs and plugins will be deleted for this server',
+      mtConfirmation, [mbYes, mbCancel], 0) of
+      mrYes:
+        begin
+          if DirectoryExists('.\server\' + serv) then
           begin
-            if DirectoryExists('.\server\' + serv) then
-              begin
-                lstservers.DeleteSelected;
-                DeleteDirectory('.\server\' + serv);
-                ShowMessage('Server has been deleted!');
-                ini := TIniFile.Create(ini_RSMsettings);
-                try
-                  ini.WriteString('Application Settings', 'activeserver', 'server1');
-                  ini.WriteString('Server Config', 'serveridentity', 'server1');
-                finally
-                  ini.Free;
-                  LoadSettings;
-                  LoadRSMsettings;
-                end;
-              end
-            else
-              begin
-                lstservers.DeleteSelected;
-                ShowMessage('The server does not seem to exist. It has been removed from the Server List');
-              end;
-          end;
-        mrCancel:
+            lstservers.DeleteSelected;
+            DeleteDirectory('.\server\' + serv);
+            ShowMessage('Server has been deleted!');
+            ini := TIniFile.Create(ini_RSMsettings);
+            try
+              ini.WriteString('Application Settings', 'activeserver',
+                'server1');
+              ini.WriteString('Server Config', 'serveridentity', 'server1');
+            finally
+              ini.Free;
+              LoadSettings;
+              LoadRSMsettings;
+            end;
+          end
+          else
           begin
-            ShowMessage('Nothing has been deleted.');
+            lstservers.DeleteSelected;
+            ShowMessage
+              ('The server does not seem to exist. It has been removed from the Server List');
           end;
-      end;
+        end;
+      mrCancel:
+        begin
+          ShowMessage('Nothing has been deleted.');
+        end;
     end;
+  end;
 end;
 
 procedure Tfrmmain.DownloadExtraFiles;
@@ -668,21 +687,39 @@ end;
 procedure Tfrmmain.chklstdataDblClick(Sender: TObject);
 begin
   if chklstdata.ItemIndex <> -1 then
-    begin
-      frmconfigeditor.sfolder := '.\server\' + serveridentity + '\oxide\data\';
-      frmconfigeditor.sfile := chklstdata.Items[chklstdata.ItemIndex];
-      frmconfigeditor.ShowModal;
-    end;
+  begin
+    frmconfigeditor.sfolder := '.\server\' + serveridentity + '\oxide\data\';
+    frmconfigeditor.sfile := chklstdata.Items[chklstdata.ItemIndex];
+    frmconfigeditor.Caption := 'Syntax Editor (' + chklstdata.Items[chklstdata.ItemIndex] + ')';
+    frmconfigeditor.ShowModal;
+  end;
+end;
+
+procedure Tfrmmain.chklstpluginsDblClick(Sender: TObject);
+begin
+  if chklstplugins.ItemIndex <> -1 then
+  begin
+    frmconfigeditor.sfolder := '.\server\' + serveridentity + '\oxide\plugins\';
+    frmconfigeditor.sfile := chklstplugins.Items[chklstplugins.ItemIndex];
+    frmconfigeditor.Caption := 'Syntax Editor (' + chklstplugins.Items[chklstplugins.ItemIndex] + ')';
+    frmconfigeditor.ShowModal;
+  end;
+end;
+
+procedure Tfrmmain.cLOSE1Click(Sender: TObject);
+begin
+  Application.Terminate;
 end;
 
 procedure Tfrmmain.chklstconfigsDblClick(Sender: TObject);
 begin
   if chklstconfigs.ItemIndex <> -1 then
-    begin
-      frmconfigeditor.sfolder := '.\server\' + serveridentity + '\oxide\config\';
-      frmconfigeditor.sfile := chklstconfigs.Items[chklstconfigs.ItemIndex];
-      frmconfigeditor.ShowModal;
-    end;
+  begin
+    frmconfigeditor.sfolder := '.\server\' + serveridentity + '\oxide\config\';
+    frmconfigeditor.sfile := chklstconfigs.Items[chklstconfigs.ItemIndex];
+    frmconfigeditor.Caption := 'Syntax Editor (' + chklstconfigs.Items[chklstconfigs.ItemIndex] + ')';
+    frmconfigeditor.ShowModal;
+  end;
 end;
 
 procedure Tfrmmain.btninstallserverClick(Sender: TObject);
@@ -690,192 +727,193 @@ var
   command: TStringList;
   ini: TIniFile;
 begin
+  mmoinstaller.Clear;
   Branch := SelectServerBranch;
 
   if frminstalleroption.install = True then
+  begin
+    lblbranch.Caption := Branch;
+
+    if Branch = 'normal' then
     begin
-      lblbranch.Caption := Branch;
 
-      if Branch = 'normal' then
-      begin
-
-        ini := TIniFile.Create(ini_RSMsettings);
-        try
-          ini.WriteString('Application Settings', 'Branch', Branch);
-        finally
-          ini.Free;
-        end;
-
-        if FileExists('.\steamcmd\steamcmd.exe') then
-        begin
-          btncancel.Click;
-          dscmnd1.Stop;
-          command := TStringList.Create;
-          try
-            command.Clear;
-            command.Add('@echo off');
-            command.Add('echo Starting Installation...');
-            command.Add('.\steamcmd' +
-              '\steamcmd.exe +login anonymous +force_install_dir "' + GetCurrentDir
-              + '" +app_update 258550 +quit');
-            command.Add('echo Done');
-            command.SaveToFile('UpdateInstall.bat');
-          finally
-            command.Free
-          end;
-
-          dscmnd1.CommandLine := 'UpdateInstall.bat';
-          dscmnd1.OutputLines := mmoinstaller.Lines;
-          dscmnd1.Execute;
-        end
-        else
-          ShowMessage
-            ('It seems that steamcmd is not installed. Please click Install SteamCMD below');
+      ini := TIniFile.Create(ini_RSMsettings);
+      try
+        ini.WriteString('Application Settings', 'Branch', Branch);
+      finally
+        ini.Free;
       end;
 
-      if Branch = 'staging' then
+      if FileExists('.\steamcmd\steamcmd.exe') then
       begin
-        ini := TIniFile.Create(ini_RSMsettings);
+        btncancel.Click;
+        dscmnd1.Stop;
+        command := TStringList.Create;
         try
-          ini.WriteString('Application Settings', 'Branch', Branch);
+          command.Clear;
+          command.Add('@echo off');
+          command.Add('echo Starting Installation...');
+          command.Add('.\steamcmd' +
+            '\steamcmd.exe +login anonymous +force_install_dir "' +
+            GetCurrentDir + '" +app_update 258550 +quit');
+          command.Add('echo Done');
+          command.SaveToFile('UpdateInstall.bat');
         finally
-          ini.Free;
+          command.Free
         end;
 
-        if FileExists('.\steamcmd\steamcmd.exe') then
-        begin
-          btncancel.Click;
-          dscmnd1.Stop;
-          command := TStringList.Create;
-          try
-            command.Clear;
-            command.Add('@echo off');
-            command.Add('echo Starting Installation...');
-            command.Add('.\steamcmd' +
-              '\steamcmd.exe +login anonymous +force_install_dir "' + GetCurrentDir
-              + '" +app_update 258550 -beta staging +quit');
-            command.Add('echo Done');
-            command.SaveToFile('UpdateInstall.bat');
-          finally
-            command.Free
-          end;
+        dscmnd1.CommandLine := 'UpdateInstall.bat';
+        dscmnd1.OutputLines := mmoinstaller.Lines;
+        dscmnd1.Execute;
+      end
+      else
+        ShowMessage
+          ('It seems that steamcmd is not installed. Please click Install SteamCMD below');
+    end;
 
-          dscmnd1.CommandLine := 'UpdateInstall.bat';
-          dscmnd1.OutputLines := mmoinstaller.Lines;
-          dscmnd1.Execute;
-        end
-        else
-          ShowMessage
-            ('It seems that steamcmd is not installed. Please click Install SteamCMD below');
+    if Branch = 'staging' then
+    begin
+      ini := TIniFile.Create(ini_RSMsettings);
+      try
+        ini.WriteString('Application Settings', 'Branch', Branch);
+      finally
+        ini.Free;
       end;
 
-      if Branch = 'prerelease' then
+      if FileExists('.\steamcmd\steamcmd.exe') then
       begin
-        ini := TIniFile.Create(ini_RSMsettings);
+        btncancel.Click;
+        dscmnd1.Stop;
+        command := TStringList.Create;
         try
-          ini.WriteString('Application Settings', 'Branch', Branch);
+          command.Clear;
+          command.Add('@echo off');
+          command.Add('echo Starting Installation...');
+          command.Add('.\steamcmd' +
+            '\steamcmd.exe +login anonymous +force_install_dir "' +
+            GetCurrentDir + '" +app_update 258550 -beta staging +quit');
+          command.Add('echo Done');
+          command.SaveToFile('UpdateInstall.bat');
         finally
-          ini.Free;
+          command.Free
         end;
 
-        if FileExists('.\steamcmd\steamcmd.exe') then
-        begin
-          btncancel.Click;
-          dscmnd1.Stop;
-          command := TStringList.Create;
-          try
-            command.Clear;
-            command.Add('@echo off');
-            command.Add('echo Starting Installation...');
-            command.Add('.\steamcmd' +
-              '\steamcmd.exe +login anonymous +force_install_dir "' + GetCurrentDir
-              + '" +app_update 258550 -beta prerelease +quit');
-            command.Add('echo Done');
-            command.SaveToFile('UpdateInstall.bat');
-          finally
-            command.Free
-          end;
+        dscmnd1.CommandLine := 'UpdateInstall.bat';
+        dscmnd1.OutputLines := mmoinstaller.Lines;
+        dscmnd1.Execute;
+      end
+      else
+        ShowMessage
+          ('It seems that steamcmd is not installed. Please click Install SteamCMD below');
+    end;
 
-          dscmnd1.CommandLine := 'UpdateInstall.bat';
-          dscmnd1.OutputLines := mmoinstaller.Lines;
-          dscmnd1.Execute;
-        end
-        else
-          ShowMessage
-            ('It seems that steamcmd is not installed. Please click Install SteamCMD below');
+    if Branch = 'prerelease' then
+    begin
+      ini := TIniFile.Create(ini_RSMsettings);
+      try
+        ini.WriteString('Application Settings', 'Branch', Branch);
+      finally
+        ini.Free;
       end;
 
-      if Branch = 'july2016' then
+      if FileExists('.\steamcmd\steamcmd.exe') then
       begin
-        ini := TIniFile.Create(ini_RSMsettings);
+        btncancel.Click;
+        dscmnd1.Stop;
+        command := TStringList.Create;
         try
-          ini.WriteString('Application Settings', 'Branch', Branch);
+          command.Clear;
+          command.Add('@echo off');
+          command.Add('echo Starting Installation...');
+          command.Add('.\steamcmd' +
+            '\steamcmd.exe +login anonymous +force_install_dir "' +
+            GetCurrentDir + '" +app_update 258550 -beta prerelease +quit');
+          command.Add('echo Done');
+          command.SaveToFile('UpdateInstall.bat');
         finally
-          ini.Free;
+          command.Free
         end;
 
-        if FileExists('.\steamcmd\steamcmd.exe') then
-        begin
-          btncancel.Click;
-          dscmnd1.Stop;
-          command := TStringList.Create;
-          try
-            command.Clear;
-            command.Add('@echo off');
-            command.Add('echo Starting Installation...');
-            command.Add('.\steamcmd' +
-              '\steamcmd.exe +login anonymous +force_install_dir "' + GetCurrentDir
-              + '" +app_update 258550 -beta july2016 +quit');
-            command.Add('echo Done');
-            command.SaveToFile('UpdateInstall.bat');
-          finally
-            command.Free
-          end;
+        dscmnd1.CommandLine := 'UpdateInstall.bat';
+        dscmnd1.OutputLines := mmoinstaller.Lines;
+        dscmnd1.Execute;
+      end
+      else
+        ShowMessage
+          ('It seems that steamcmd is not installed. Please click Install SteamCMD below');
+    end;
 
-          dscmnd1.CommandLine := 'UpdateInstall.bat';
-          dscmnd1.OutputLines := mmoinstaller.Lines;
-          dscmnd1.Execute;
-        end
-        else
-          ShowMessage
-            ('It seems that steamcmd is not installed. Please click Install SteamCMD below');
+    if Branch = 'july2016' then
+    begin
+      ini := TIniFile.Create(ini_RSMsettings);
+      try
+        ini.WriteString('Application Settings', 'Branch', Branch);
+      finally
+        ini.Free;
       end;
 
-      if Branch = 'october2016' then
+      if FileExists('.\steamcmd\steamcmd.exe') then
       begin
-        ini := TIniFile.Create(ini_RSMsettings);
+        btncancel.Click;
+        dscmnd1.Stop;
+        command := TStringList.Create;
         try
-          ini.WriteString('Application Settings', 'Branch', Branch);
+          command.Clear;
+          command.Add('@echo off');
+          command.Add('echo Starting Installation...');
+          command.Add('.\steamcmd' +
+            '\steamcmd.exe +login anonymous +force_install_dir "' +
+            GetCurrentDir + '" +app_update 258550 -beta july2016 +quit');
+          command.Add('echo Done');
+          command.SaveToFile('UpdateInstall.bat');
         finally
-          ini.Free;
+          command.Free
         end;
 
-        if FileExists('.\steamcmd\steamcmd.exe') then
-        begin
-          btncancel.Click;
-          dscmnd1.Stop;
-          command := TStringList.Create;
-          try
-            command.Clear;
-            command.Add('@echo off');
-            command.Add('echo Starting Installation...');
-            command.Add('.\steamcmd' +
-              '\steamcmd.exe +login anonymous +force_install_dir "' + GetCurrentDir
-              + '" +app_update 258550 -beta october2016 +quit');
-            command.Add('echo Done');
-            command.SaveToFile('UpdateInstall.bat');
-          finally
-            command.Free
-          end;
+        dscmnd1.CommandLine := 'UpdateInstall.bat';
+        dscmnd1.OutputLines := mmoinstaller.Lines;
+        dscmnd1.Execute;
+      end
+      else
+        ShowMessage
+          ('It seems that steamcmd is not installed. Please click Install SteamCMD below');
+    end;
 
-          dscmnd1.CommandLine := 'UpdateInstall.bat';
-          dscmnd1.OutputLines := mmoinstaller.Lines;
-          dscmnd1.Execute;
-        end
-        else
-          ShowMessage
-            ('It seems that steamcmd is not installed. Please click Install SteamCMD below');
+    if Branch = 'october2016' then
+    begin
+      ini := TIniFile.Create(ini_RSMsettings);
+      try
+        ini.WriteString('Application Settings', 'Branch', Branch);
+      finally
+        ini.Free;
       end;
+
+      if FileExists('.\steamcmd\steamcmd.exe') then
+      begin
+        btncancel.Click;
+        dscmnd1.Stop;
+        command := TStringList.Create;
+        try
+          command.Clear;
+          command.Add('@echo off');
+          command.Add('echo Starting Installation...');
+          command.Add('.\steamcmd' +
+            '\steamcmd.exe +login anonymous +force_install_dir "' +
+            GetCurrentDir + '" +app_update 258550 -beta october2016 +quit');
+          command.Add('echo Done');
+          command.SaveToFile('UpdateInstall.bat');
+        finally
+          command.Free
+        end;
+
+        dscmnd1.CommandLine := 'UpdateInstall.bat';
+        dscmnd1.OutputLines := mmoinstaller.Lines;
+        dscmnd1.Execute;
+      end
+      else
+        ShowMessage
+          ('It seems that steamcmd is not installed. Please click Install SteamCMD below');
+    end;
   end;
 end;
 
@@ -890,7 +928,7 @@ begin
       end;
     mrCancel:
       begin
-        //ShowMessage('Canceled');
+        // ShowMessage('Canceled');
       end;
   end;
 end;
@@ -930,7 +968,8 @@ begin
   if FileExists('PluginUpdater.exe') then
   begin
     parameter := '--pluginFolder "server\' + serveridentity + '\oxide\plugins"';
-    ShellExecute(0, 'open', 'PluginUpdater.exe', PChar(parameter), nil, SW_SHOW);
+    ShellExecute(0, 'open', 'PluginUpdater.exe', Pchar(parameter), nil,
+      SW_SHOW);
   end
   else
   begin
@@ -988,6 +1027,8 @@ var
   command: TStringList;
   ini: TIniFile;
 begin
+  mmoinstaller.Clear;
+
   if Branch = 'normal' then
     if FileExists('.\steamcmd\steamcmd.exe') then
     begin
@@ -1136,65 +1177,67 @@ procedure Tfrmmain.btnstartserverClick(Sender: TObject);
 var
   commands: TStringList;
 begin
-      commands := TStringList.Create;
-      try
-        commands.Add('@echo off');
-        commands.Add(':start');
-        commands.Add('cls');
-        commands.Add('echo Starting Server...');
-        commands.Add('echo This may take a while...');
-        commands.Add('RustDedicated.exe -batchmode -nographics ^');
-        commands.Add('+oxide.directory "server/' + serveridentity + '/oxide" ^');
-        commands.Add('+rcon.ip ' + rconip + ' ^');
-        commands.Add('+rcon.port ' + rconport + ' ^');
-        commands.Add('+rcon.password "' + rconpass + '" ^');
-        commands.Add('+server.ip ' + serverip + ' ^');
-        commands.Add('+server.port ' + serverport + ' ^');
-        commands.Add('+server.maxplayers ' + maxplayers + ' ^');
-        commands.Add('+server.hostname "' + servername + '" ^');
-        commands.Add('+server.identity "' + serveridentity + '" ^');
-        commands.Add('+server.level "' + maptype + '" ^');
-        commands.Add('+server.seed ' + serverseed + ' +server.worldsize ' + worldsize + ' ^');
-        commands.Add('+server.saveinterval ' + saveinterval + ' ^');
-        commands.Add('+server.globalchat ' + globalchat + ' ^');
-        commands.Add('+server.description "' + description + '" ^');
-        commands.Add('+server.headerimage "' + serverbanner + '" ^');
-        commands.Add('+server.url "' + serverurl + '" ^');
-        commands.Add('+server.radiation ' + radiation + ' ^');
-        commands.Add('+server.eac ' + eac + ' ^');
-        commands.Add('+server.secure ' + vac + ' ^');
-        commands.Add('+server.tickrate ' + IntToStr(tickrate) + ' ^');
-        commands.Add('+server.pve ' + pve + ' ^');
-        commands.Add('+server.stability ' + stability + ' ^');
-        commands.Add('+ai.think ' + aithink + ' ^');
-        commands.Add('+ai.move ' + aimove + ' ^');
-        commands.Add('+craft.instant ' + instantcraft + ' ^');
-        commands.Add('+antihack.enabled ' + antihack + ' ^');
-        commands.Add('+decay.scale ' + decay + ' ^');
-        commands.Add('+nav_grid ' + scientist + ' ^');
-        commands.Add('+bradley.enabled ' + bradley + ' ^');
-        commands.Add('+nav_wait ' + nav_wait);
+  commands := TStringList.Create;
+  try
+    commands.Add('@echo off');
+    commands.Add(':start');
+    commands.Add('cls');
+    commands.Add('echo Starting Server...');
+    commands.Add('echo This may take a while...');
+    commands.Add('RustDedicated.exe -batchmode -nographics ^');
+    commands.Add('+oxide.directory "server/' + serveridentity + '/oxide" ^');
+    commands.Add('+rcon.ip ' + rconip + ' ^');
+    commands.Add('+rcon.port ' + rconport + ' ^');
+    commands.Add('+rcon.password "' + rconpass + '" ^');
+    commands.Add('+server.ip ' + serverip + ' ^');
+    commands.Add('+server.port ' + serverport + ' ^');
+    commands.Add('+server.maxplayers ' + maxplayers + ' ^');
+    commands.Add('+server.hostname "' + servername + '" ^');
+    commands.Add('+server.identity "' + serveridentity + '" ^');
+    commands.Add('+server.level "' + maptype + '" ^');
+    commands.Add('+server.seed ' + serverseed + ' +server.worldsize ' +
+      worldsize + ' ^');
+    commands.Add('+server.saveinterval ' + saveinterval + ' ^');
+    commands.Add('+server.globalchat ' + globalchat + ' ^');
+    commands.Add('+server.description "' + description + '" ^');
+    commands.Add('+server.headerimage "' + serverbanner + '" ^');
+    commands.Add('+server.url "' + serverurl + '" ^');
+    commands.Add('+server.radiation ' + radiation + ' ^');
+    commands.Add('+server.eac ' + eac + ' ^');
+    commands.Add('+server.secure ' + vac + ' ^');
+    commands.Add('+server.tickrate ' + IntToStr(tickrate) + ' ^');
+    commands.Add('+server.pve ' + pve + ' ^');
+    commands.Add('+server.stability ' + stability + ' ^');
+    commands.Add('+ai.think ' + aithink + ' ^');
+    commands.Add('+ai.move ' + aimove + ' ^');
+    commands.Add('+craft.instant ' + instantcraft + ' ^');
+    commands.Add('+antihack.enabled ' + antihack + ' ^');
+    commands.Add('+decay.scale ' + decay + ' ^');
+    commands.Add('+nav_grid ' + scientist + ' ^');
+    commands.Add('+bradley.enabled ' + bradley + ' ^');
+    commands.Add('+nav_wait ' + nav_wait + ' ^');
+    commands.Add('+nav_disable ' + nav_disable);
 
-        if chkautorestart.Checked then
-          begin
-            commands.Add('cls');
-            commands.Add('echo Restarting Server...');
-            commands.Add('timeout /t 10');
-            commands.Add('goto start');
-          end;
+    if chkautorestart.Checked then
+    begin
+      commands.Add('cls');
+      commands.Add('echo Restarting Server...');
+      commands.Add('timeout /t 10');
+      commands.Add('goto start');
+    end;
 
-      finally
-        commands.SaveToFile('start.bat');
-        commands.Free;
-      end;
+  finally
+    commands.SaveToFile('start.bat');
+    commands.Free;
+  end;
 
-      if FileExists('RustDedicated.exe') then
-        WinExec('start.bat', SW_SHOWNORMAL)
-      else
-        ShowMessage('Could not find RustDedicated.exe! Is the server installed?');
+  if FileExists('RustDedicated.exe') then
+    WinExec('start.bat', SW_SHOWNORMAL)
+  else
+    ShowMessage('Could not find RustDedicated.exe! Is the server installed?');
 
-      lstservers.Clear;
-      GetDirList('.\server');
+  lstservers.Clear;
+  GetDirList('.\server');
 end;
 
 procedure Tfrmmain.btn7Click(Sender: TObject);
@@ -1293,103 +1336,103 @@ begin
       ini.WriteString('ServerSettings', 'tickrate', IntToStr(tickrate));
 
       if tglswtchrconweb.State = tssOn then
-        begin
-          ini.WriteString('ServerSettings', 'rconweb', '1');
-          rconweb := '1';
-        end
+      begin
+        ini.WriteString('ServerSettings', 'rconweb', '1');
+        rconweb := '1';
+      end
       else
-        begin
-          ini.WriteString('ServerSettings', 'rconweb', '0');
-          rconweb := '0';
-        end;
+      begin
+        ini.WriteString('ServerSettings', 'rconweb', '0');
+        rconweb := '0';
+      end;
 
       if tglswtchglobalchat.State = tssOn then
-        begin
-          ini.WriteString('ServerSettings', 'globalchat', '1');
-          globalchat := '1';
-        end
+      begin
+        ini.WriteString('ServerSettings', 'globalchat', '1');
+        globalchat := '1';
+      end
       else
-        begin
-          ini.WriteString('ServerSettings', 'globalchat', '0');
-          globalchat := '0';
-        end;
+      begin
+        ini.WriteString('ServerSettings', 'globalchat', '0');
+        globalchat := '0';
+      end;
 
       if tglswtchserverpve.State = tssOn then
-        begin
-          ini.WriteString('ServerSettings', 'pve', '1');
-          pve := '1';
-        end
+      begin
+        ini.WriteString('ServerSettings', 'pve', '1');
+        pve := '1';
+      end
       else
-        begin
-          ini.WriteString('ServerSettings', 'pve', '0');
-          pve := '0';
-        end;
+      begin
+        ini.WriteString('ServerSettings', 'pve', '0');
+        pve := '0';
+      end;
 
       if tglswtchstability.State = tssOn then
-        begin
-          ini.WriteString('ServerSettings', 'stability', '1');
-          stability := '1';
-        end
+      begin
+        ini.WriteString('ServerSettings', 'stability', '1');
+        stability := '1';
+      end
       else
-        begin
-          ini.WriteString('ServerSettings', 'stability', '0');
-          stability := '0';
-        end;
+      begin
+        ini.WriteString('ServerSettings', 'stability', '0');
+        stability := '0';
+      end;
 
       if tglswtchaithink.State = tssOn then
-        begin
-          ini.WriteString('ServerSettings', 'aithink', '1');
-          aithink := '1';
-        end
+      begin
+        ini.WriteString('ServerSettings', 'aithink', '1');
+        aithink := '1';
+      end
       else
-        begin
-          ini.WriteString('ServerSettings', 'aithink', '0');
-          aithink := '0';
-        end;
+      begin
+        ini.WriteString('ServerSettings', 'aithink', '0');
+        aithink := '0';
+      end;
 
       if tglswtchradiation.State = tssOn then
-        begin
-          ini.WriteString('ServerSettings', 'radiation', '1');
-          radiation := '1';
-        end
+      begin
+        ini.WriteString('ServerSettings', 'radiation', '1');
+        radiation := '1';
+      end
       else
-        begin
-          ini.WriteString('ServerSettings', 'radiation', '0');
-          radiation := '0';
-        end;
+      begin
+        ini.WriteString('ServerSettings', 'radiation', '0');
+        radiation := '0';
+      end;
 
       if tglswtcheac.State = tssOn then
-        begin
-          ini.WriteString('ServerSettings', 'easyanticheat', '1');
-          eac := '1';
-        end
+      begin
+        ini.WriteString('ServerSettings', 'easyanticheat', '1');
+        eac := '1';
+      end
       else
-        begin
-          ini.WriteString('ServerSettings', 'easyanticheat', '0');
-          eac := '0';
-        end;
+      begin
+        ini.WriteString('ServerSettings', 'easyanticheat', '0');
+        eac := '0';
+      end;
 
       if tglswtchvac.State = tssOn then
-        begin
-          ini.WriteString('ServerSettings', 'secure', '1');
-          vac := '1';
-        end
+      begin
+        ini.WriteString('ServerSettings', 'secure', '1');
+        vac := '1';
+      end
       else
-        begin
-          ini.WriteString('ServerSettings', 'secure', '0');
-          vac := '0';
-        end;
+      begin
+        ini.WriteString('ServerSettings', 'secure', '0');
+        vac := '0';
+      end;
 
       if tglswtchaimove.State = tssOn then
-        begin
-          ini.WriteString('ServerSettings', 'aimove', '1');
-          aithink := '1';
-        end
+      begin
+        ini.WriteString('ServerSettings', 'aimove', '1');
+        aithink := '1';
+      end
       else
-        begin
-          ini.WriteString('ServerSettings', 'aimove', '0');
-          aithink := '0';
-        end;
+      begin
+        ini.WriteString('ServerSettings', 'aimove', '0');
+        aithink := '0';
+      end;
 
       if tglswtchinstantcraft.State = tssOn then
       begin
@@ -1457,6 +1500,17 @@ begin
         nav_wait := '0';
       end;
 
+      if tglswtchnavdisable.State = tssOn then
+      begin
+        ini.WriteString('ServerSettings', 'nav_disable', '1');
+        nav_disable := '1';
+      end
+      else
+      begin
+        ini.WriteString('ServerSettings', 'nav_disable', '0');
+        nav_disable:= '0';
+      end;
+
     finally
       ini.Free;
     end;
@@ -1487,20 +1541,23 @@ end;
 
 procedure Tfrmmain.FormActivate(Sender: TObject);
 begin
-  if FileExists('libeay32.dll') and FileExists('ssleay32.dll') and FileExists('Rust.ttf') then
+  if FileExists('libeay32.dll') and FileExists('ssleay32.dll') and
+    FileExists('Rust.ttf') then
     //
   else
-    begin
-      ShowMessage('There seems to be some missing files. They will be downloaded after clicking ok. (Size: 1mb)');
+  begin
+    ShowMessage
+      ('There seems to be some missing files. They will be downloaded after clicking ok. (Size: 1mb)');
 
-      if IsConnected = True then
-        begin
-          DownloadExtraFiles;
-          ShowMessage('Please restart Rust Server Manager for the files to take full effect.');
-        end
-      else
-        ShowMessage('Error: There is no internet connection!');
-    end;
+    if IsConnected = True then
+    begin
+      DownloadExtraFiles;
+      ShowMessage
+        ('Please restart Rust Server Manager for the files to take full effect.');
+    end
+    else
+      ShowMessage('Error: There is no internet connection!');
+  end;
 end;
 
 procedure Tfrmmain.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -1556,31 +1613,31 @@ begin
     (TStyleManager.ActiveStyle.Name);
 
   if DirectoryExists('.\server\' + activeserver) then
-    begin
-      ini_settings := '.\server\' + activeserver + '\settings.ini';
-      lbledtserveridentity.Text := activeserver;
-      LoadSettings;
-    end
+  begin
+    ini_settings := '.\server\' + activeserver + '\settings.ini';
+    lbledtserveridentity.Text := activeserver;
+    LoadSettings;
+  end
   else
-    begin
-      ForceDirectories('.\server\' + activeserver);
-      ini_settings := '.\server\' + activeserver + '\settings.ini';
-      lbledtserveridentity.Text := activeserver;
+  begin
+    ForceDirectories('.\server\' + activeserver);
+    ini_settings := '.\server\' + activeserver + '\settings.ini';
+    lbledtserveridentity.Text := activeserver;
 
-      lstservers.Clear;
-      GetDirList('.\server');
-      lblcurrentservers.Caption := 'Current Servers: [' +
-        IntToStr(lstservers.Items.Count) + ']';
-      LoadSettings;
-    end;
+    lstservers.Clear;
+    GetDirList('.\server');
+    lblcurrentservers.Caption := 'Current Servers: [' +
+      IntToStr(lstservers.Items.Count) + ']';
+    LoadSettings;
+  end;
 
   if FileExists('libeay32.dll') and FileExists('ssleay32.dll') then
     //
   else
-    begin
-      DeleteFile('ssleay32.dll');
-      DeleteFile('libeay32.dll');
-    end;
+  begin
+    DeleteFile('ssleay32.dll');
+    DeleteFile('libeay32.dll');
+  end;
 end;
 
 procedure Tfrmmain.FormDestroy(Sender: TObject);
@@ -1624,24 +1681,26 @@ end;
 
 function Tfrmmain.GetLocalIP: string;
 type
-  TaPInAddr = array [0..10] of PInAddr;
+  TaPInAddr = array [0 .. 10] of PInAddr;
   PaPInAddr = ^TaPInAddr;
 var
-  phe : PHostEnt;
-  pptr : PaPInAddr;
-  Buffer : array [0..63] of AnsiChar;
-  i : Integer;
-  GInitData : TWSADATA;
+  phe: PHostEnt;
+  pptr: PaPInAddr;
+  Buffer: array [0 .. 63] of AnsiChar;
+  i: Integer;
+  GInitData: TWSADATA;
 begin
   WSAStartup($101, GInitData);
   Result := '';
-  GetHostName(Buffer, SizeOf(Buffer));
-  phe :=GetHostByName(buffer);
-  if phe = nil then Exit;
-  pptr := PaPInAddr(Phe^.h_addr_list);
+  GetHostName(Buffer, sizeof(Buffer));
+  phe := GetHostByName(Buffer);
+  if phe = nil then
+    exit;
+  pptr := PaPInAddr(phe^.h_addr_list);
   i := 0;
-  while pptr^[i] <> nil do begin
-    result:=StrPas(inet_ntoa(pptr^[i]^));
+  while pptr^[i] <> nil do
+  begin
+    Result := StrPas(inet_ntoa(pptr^[i]^));
     Inc(i);
   end;
   WSACleanup;
@@ -1806,7 +1865,7 @@ end;
 
 procedure Tfrmmain.lbledtserveridentityKeyPress(Sender: TObject; var Key: Char);
 begin
-  if Key in ['0'..'9','A'..'Z', 'a'..'z', #8] then
+  if Key in ['0' .. '9', 'A' .. 'Z', 'a' .. 'z', #8] then
   else
     Key := #0;
 end;
@@ -1832,41 +1891,72 @@ procedure Tfrmmain.LoadLanguageFile;
 var
   ini: TMemIniFile;
 begin
-  ini := TMemIniFile.Create(ChangeFileExt(GetCurrentDir,'.\lang.ini'), TEncoding.UTF8);
+  ini := TMemIniFile.Create(ChangeFileExt(GetCurrentDir, '.\lang.ini'),
+    TEncoding.UTF8);
   try
-    //Server Config Tab
-    lbledtservername.EditLabel.Caption := ini.ReadString('Server Config TAB','Server Name','Server Name:');
-    lbledtserverdescription.EditLabel.Caption := ini.ReadString('Server Config TAB','Server Description','Server Description:');
-    lbledtserverurl.EditLabel.Caption := ini.ReadString('Server Config TAB','Server URL','Server URL:');
-    lbledtserverbanner.EditLabel.Caption := ini.ReadString('Server Config TAB','Server Banner URL','Server Banner URL:');
-    lblserverseed.Caption := ini.ReadString('Server Config TAB','Server Seed','Server Seed:');
-    btngenerate.Caption := ini.ReadString('Server Config TAB','Generate','Generate');
-    lblworldsize.Caption := ini.ReadString('Server Config TAB','World Size','World Size:');
-    lblmaxplayers.Caption := ini.ReadString('Server Config TAB','Max Players','Max Players:');
-    lbledtserverip.EditLabel.Caption := ini.ReadString('Server Config TAB','Server IP','Server IP:');
-    lbledtrconip.EditLabel.Caption := ini.ReadString('Server Config TAB','Rcon IP','Rcon IP:');
-    lblsaveinterval.Caption := ini.ReadString('Server Config TAB','Save Interval','Save Interval');
-    lbledtserveridentity.EditLabel.Caption := ini.ReadString('Server Config TAB','Server Identity','Server Identity:');
-    lbledtrconpass.EditLabel.Caption := ini.ReadString('Server Config TAB','Rcon Password','Rcon Password:');
-    lblcurrentservers.Caption := ini.ReadString('Server Config TAB','Current Servers','Current Servers:');
-    lbltickrate.Caption := ini.ReadString('Server Config TAB', 'Tick Rate', 'Tick Rate:');
-    lbledtserverport.EditLabel.Caption := ini.ReadString('Server Config TAB', 'Server Port', 'Server Port:');
-    lbledtrconport.EditLabel.Caption := ini.ReadString('Server Config TAB', 'Rcon Port', 'Rcon Port:');
-    btnsaveconfig.Caption := ini.ReadString('Server Config TAB', 'Save Config', 'Save Config:');
-    grpmap.Caption := ini.ReadString('Server Config TAB', 'Map Type', 'Map Type:');
-    grpserversettings.Caption := ini.ReadString('Server Config TAB', 'More Server Settings', 'More Server Settings:');
+    // Server Config Tab
+    lbledtservername.EditLabel.Caption := ini.ReadString('Server Config TAB',
+      'Server Name', 'Server Name:');
+    lbledtserverdescription.EditLabel.Caption :=
+      ini.ReadString('Server Config TAB', 'Server Description',
+      'Server Description:');
+    lbledtserverurl.EditLabel.Caption := ini.ReadString('Server Config TAB',
+      'Server URL', 'Server URL:');
+    lbledtserverbanner.EditLabel.Caption := ini.ReadString('Server Config TAB',
+      'Server Banner URL', 'Server Banner URL:');
+    lblserverseed.Caption := ini.ReadString('Server Config TAB', 'Server Seed',
+      'Server Seed:');
+    btngenerate.Caption := ini.ReadString('Server Config TAB', 'Generate',
+      'Generate');
+    lblworldsize.Caption := ini.ReadString('Server Config TAB', 'World Size',
+      'World Size:');
+    lblmaxplayers.Caption := ini.ReadString('Server Config TAB', 'Max Players',
+      'Max Players:');
+    lbledtserverip.EditLabel.Caption := ini.ReadString('Server Config TAB',
+      'Server IP', 'Server IP:');
+    lbledtrconip.EditLabel.Caption := ini.ReadString('Server Config TAB',
+      'Rcon IP', 'Rcon IP:');
+    lblsaveinterval.Caption := ini.ReadString('Server Config TAB',
+      'Save Interval', 'Save Interval');
+    lbledtserveridentity.EditLabel.Caption :=
+      ini.ReadString('Server Config TAB', 'Server Identity',
+      'Server Identity:');
+    lbledtrconpass.EditLabel.Caption := ini.ReadString('Server Config TAB',
+      'Rcon Password', 'Rcon Password:');
+    lblcurrentservers.Caption := ini.ReadString('Server Config TAB',
+      'Current Servers', 'Current Servers:');
+    lbltickrate.Caption := ini.ReadString('Server Config TAB', 'Tick Rate',
+      'Tick Rate:');
+    lbledtserverport.EditLabel.Caption := ini.ReadString('Server Config TAB',
+      'Server Port', 'Server Port:');
+    lbledtrconport.EditLabel.Caption := ini.ReadString('Server Config TAB',
+      'Rcon Port', 'Rcon Port:');
+    btnsaveconfig.Caption := ini.ReadString('Server Config TAB', 'Save Config',
+      'Save Config:');
+    grpmap.Caption := ini.ReadString('Server Config TAB', 'Map Type',
+      'Map Type:');
+    grpserversettings.Caption := ini.ReadString('Server Config TAB',
+      'More Server Settings', 'More Server Settings:');
 
-    //Server Installer
-    lblinstallerlog.Caption := ini.ReadString('Server Installer TAB', 'Log', 'Log:');
-    lblactivebranch.Caption := ini.ReadString('Server Installer TAB', 'Active Branch', 'Active Branch:');
-    btninstallserver.Caption := ini.ReadString('Server Installer TAB', 'Install / Update Server', 'Install / Update Server:');
-    btnvalidateserver.Caption := ini.ReadString('Server Installer TAB', 'Validate Server', 'Validate Server:');
-    btnexportinstallerlog.Caption := ini.ReadString('Server Installer TAB', 'Export Log', 'Export Log:');
-    btncancel.Caption := ini.ReadString('Server Installer TAB', 'Stop Task (Can Continue)', 'Stop Task (Can Continue):');
-    btninstallsteamcmd.Caption := ini.ReadString('Server Installer TAB', 'Install SteamCMD', 'Install SteamCMD:');
-    btninstalloxidemod.Caption := ini.ReadString('Server Installer TAB', 'Install OxideMod', 'Install OxideMod:');
+    // Server Installer
+    lblinstallerlog.Caption := ini.ReadString('Server Installer TAB',
+      'Log', 'Log:');
+    lblactivebranch.Caption := ini.ReadString('Server Installer TAB',
+      'Active Branch', 'Active Branch:');
+    btninstallserver.Caption := ini.ReadString('Server Installer TAB',
+      'Install / Update Server', 'Install / Update Server:');
+    btnvalidateserver.Caption := ini.ReadString('Server Installer TAB',
+      'Validate Server', 'Validate Server:');
+    btnexportinstallerlog.Caption := ini.ReadString('Server Installer TAB',
+      'Export Log', 'Export Log:');
+    btncancel.Caption := ini.ReadString('Server Installer TAB',
+      'Stop Task (Can Continue)', 'Stop Task (Can Continue):');
+    btninstallsteamcmd.Caption := ini.ReadString('Server Installer TAB',
+      'Install SteamCMD', 'Install SteamCMD:');
+    btninstalloxidemod.Caption := ini.ReadString('Server Installer TAB',
+      'Install OxideMod', 'Install OxideMod:');
 
-    //Plugin Manager
+    // Plugin Manager
   finally
     ini.Free;
   end;
@@ -1875,28 +1965,28 @@ end;
 procedure Tfrmmain.MakeActive1Click(Sender: TObject);
 begin
   if lstservers.ItemIndex = -1 then
-    begin
-      ShowMessage('No server is selected!');
-    end
+  begin
+    ShowMessage('No server is selected!');
+  end
   else
-    begin
-      lbledtserveridentity.Text := lstservers.Items[lstservers.ItemIndex];
-      activeserver := lbledtserveridentity.Text;
+  begin
+    lbledtserveridentity.Text := lstservers.Items[lstservers.ItemIndex];
+    activeserver := lbledtserveridentity.Text;
 
-      if DirectoryExists('.\server\' + activeserver) then
-      begin
-        ini_settings := '.\server\' + activeserver + '\settings.ini';
-        lbledtserveridentity.Text := activeserver;
-        LoadSettings;
-      end
-      else
-      begin
-        ForceDirectories('.\server\' + activeserver);
-        ini_settings := '.\server\' + activeserver + '\settings.ini';
-        lbledtserveridentity.Text := activeserver;
-        // LoadSettings;
-      end;
+    if DirectoryExists('.\server\' + activeserver) then
+    begin
+      ini_settings := '.\server\' + activeserver + '\settings.ini';
+      lbledtserveridentity.Text := activeserver;
+      LoadSettings;
+    end
+    else
+    begin
+      ForceDirectories('.\server\' + activeserver);
+      ini_settings := '.\server\' + activeserver + '\settings.ini';
+      lbledtserveridentity.Text := activeserver;
+      // LoadSettings;
     end;
+  end;
 end;
 
 procedure Tfrmmain.MakeLanguageFile;
@@ -1905,39 +1995,47 @@ var
 begin
   ini := TIniFile.Create('.\lang.ini');
   try
-    //Server Config Tab
-    ini.WriteString('Server Config TAB','Server Name','Server Name:');
-    ini.WriteString('Server Config TAB','Server Description','Server Description:');
-    ini.WriteString('Server Config TAB','Server URL','Server URL:');
-    ini.WriteString('Server Config TAB','Server Banner URL','Server Banner URL:');
-    ini.WriteString('Server Config TAB','Server Seed','Server Seed:');
-    ini.WriteString('Server Config TAB','Generate','Generate');
-    ini.WriteString('Server Config TAB','World Size','World Size:');
-    ini.WriteString('Server Config TAB','Max Players','Max Players:');
-    ini.WriteString('Server Config TAB','Server IP','Server IP:');
-    ini.WriteString('Server Config TAB','Rcon IP','Rcon IP:');
-    ini.WriteString('Server Config TAB','Save Interval','Save Interval:');
-    ini.WriteString('Server Config TAB','Server Identity','Server Identity:');
-    ini.WriteString('Server Config TAB','Rcon Password','Rcon Password:');
-    ini.WriteString('Server Config TAB','Current Servers','Current Servers:');
+    // Server Config Tab
+    ini.WriteString('Server Config TAB', 'Server Name', 'Server Name:');
+    ini.WriteString('Server Config TAB', 'Server Description',
+      'Server Description:');
+    ini.WriteString('Server Config TAB', 'Server URL', 'Server URL:');
+    ini.WriteString('Server Config TAB', 'Server Banner URL',
+      'Server Banner URL:');
+    ini.WriteString('Server Config TAB', 'Server Seed', 'Server Seed:');
+    ini.WriteString('Server Config TAB', 'Generate', 'Generate');
+    ini.WriteString('Server Config TAB', 'World Size', 'World Size:');
+    ini.WriteString('Server Config TAB', 'Max Players', 'Max Players:');
+    ini.WriteString('Server Config TAB', 'Server IP', 'Server IP:');
+    ini.WriteString('Server Config TAB', 'Rcon IP', 'Rcon IP:');
+    ini.WriteString('Server Config TAB', 'Save Interval', 'Save Interval:');
+    ini.WriteString('Server Config TAB', 'Server Identity', 'Server Identity:');
+    ini.WriteString('Server Config TAB', 'Rcon Password', 'Rcon Password:');
+    ini.WriteString('Server Config TAB', 'Current Servers', 'Current Servers:');
     ini.WriteString('Server Config TAB', 'Tick Rate', 'Tick Rate:');
     ini.WriteString('Server Config TAB', 'Server Port', 'Server Port:');
     ini.WriteString('Server Config TAB', 'Rcon Port', 'Rcon Port:');
     ini.WriteString('Server Config TAB', 'Save Config', 'Save Config:');
     ini.WriteString('Server Config TAB', 'Map Type', 'Map Type:');
-    ini.WriteString('Server Config TAB', 'More Server Settings', 'More Server Settings:');
+    ini.WriteString('Server Config TAB', 'More Server Settings',
+      'More Server Settings:');
 
-    //Server Installer
+    // Server Installer
     ini.WriteString('Server Installer TAB', 'Log', 'Log:');
     ini.WriteString('Server Installer TAB', 'Active Branch', 'Active Branch:');
-    ini.WriteString('Server Installer TAB', 'Install / Update Server', 'Install / Update Server:');
-    ini.WriteString('Server Installer TAB', 'Validate Server', 'Validate Server:');
+    ini.WriteString('Server Installer TAB', 'Install / Update Server',
+      'Install / Update Server:');
+    ini.WriteString('Server Installer TAB', 'Validate Server',
+      'Validate Server:');
     ini.WriteString('Server Installer TAB', 'Export Log', 'Export Log:');
-    ini.WriteString('Server Installer TAB', 'Stop Task (Can Continue)', 'Stop Task (Can Continue):');
-    ini.WriteString('Server Installer TAB', 'Install SteamCMD', 'Install SteamCMD:');
-    ini.WriteString('Server Installer TAB', 'Install OxideMod', 'Install OxideMod:');
+    ini.WriteString('Server Installer TAB', 'Stop Task (Can Continue)',
+      'Stop Task (Can Continue):');
+    ini.WriteString('Server Installer TAB', 'Install SteamCMD',
+      'Install SteamCMD:');
+    ini.WriteString('Server Installer TAB', 'Install OxideMod',
+      'Install OxideMod:');
 
-    //Plugin Manager
+    // Plugin Manager
   finally
     ShowMessage('lang.ini generated!');
     ini.Free;
@@ -1952,8 +2050,8 @@ begin
   begin
     ini := TIniFile.Create(ini_RSMsettings);
     try
-      activeserver := ini.ReadString('Application Settings',
-        'activeserver', 'server1');
+      activeserver := ini.ReadString('Application Settings', 'activeserver',
+        'server1');
       lbledtserveridentity.Text := activeserver;
 
       backupdir := ini.ReadString('Application Settings', 'backupto', '');
@@ -1978,16 +2076,18 @@ begin
         StrToBool(ini.ReadString('Application Settings',
         'loadcustomtheme', '0'));
 
-      chkloadlangfile.Checked := StrToBool(ini.ReadString('Application Settings', 'loadlangfile', '0'));
+      chkloadlangfile.Checked :=
+        StrToBool(ini.ReadString('Application Settings', 'loadlangfile', '0'));
       if chkloadlangfile.Checked then
+      begin
+        if FileExists('lang.ini') then
         begin
-          if FileExists('lang.ini') then
-            begin
-              LoadLanguageFile
-            end
-          else
-            ShowMessage('You have chosen to load the language file on start but there is nothing to load.');
-        end;
+          LoadLanguageFile
+        end
+        else
+          ShowMessage
+            ('You have chosen to load the language file on start but there is nothing to load.');
+      end;
 
       if chkloadcustomtheme.Checked = True then
       begin
@@ -2013,179 +2113,186 @@ procedure Tfrmmain.LoadSettings;
 var
   ini: TIniFile;
 begin
-    ini := TIniFile.Create(ini_settings);
-    try
-      Branch := ini.ReadString('ServerSettings', 'Branch', 'normal');
-      servername := ini.ReadString('Server Config', 'servername', 'My Server');
-      description := ini.ReadString('Server Config', 'description', 'Edit me');
-      serverurl := ini.ReadString('Server Config', 'serverurl', '');
-      serverbanner := ini.ReadString('Server Config', 'serverbanner', '');
-      serverseed := ini.ReadString('Server Config', 'serverseed', '54162');
-      worldsize := ini.ReadString('Server Config', 'worldsize', '4000');
-      maxplayers := ini.ReadString('Server Config', 'maxplayers', '10');
-      serveridentity := ini.ReadString('Server Config', 'serveridentity', 'server1');
-      rconpass := ini.ReadString('Server Config', 'rconpass', 'changeme');
-      rconport := ini.ReadString('Server Config', 'rconport', '28016');
-      serverport := ini.ReadString('Server Config', 'serverport', '28015');
-      maptype := ini.ReadString('Server Config', 'maptype', 'Barren');
-      serverip := ini.ReadString('ServerSettings', 'serverip', '0.0.0.0');
-      rconip := ini.ReadString('ServerSettings', 'rconip', '0.0.0.0');
-      saveinterval := ini.ReadString('ServerSettings', 'saveinterval', '300');
-      tickrate := StrToInt(ini.ReadString('ServerSettings', 'tickrate', '10'));
+  ini := TIniFile.Create(ini_settings);
+  try
+    Branch := ini.ReadString('ServerSettings', 'Branch', 'normal');
+    servername := ini.ReadString('Server Config', 'servername', 'My Server');
+    description := ini.ReadString('Server Config', 'description', 'Edit me');
+    serverurl := ini.ReadString('Server Config', 'serverurl', '');
+    serverbanner := ini.ReadString('Server Config', 'serverbanner', '');
+    serverseed := ini.ReadString('Server Config', 'serverseed', '54162');
+    worldsize := ini.ReadString('Server Config', 'worldsize', '4000');
+    maxplayers := ini.ReadString('Server Config', 'maxplayers', '10');
+    serveridentity := ini.ReadString('Server Config', 'serveridentity',
+      'server1');
+    rconpass := ini.ReadString('Server Config', 'rconpass', 'changeme');
+    rconport := ini.ReadString('Server Config', 'rconport', '28016');
+    serverport := ini.ReadString('Server Config', 'serverport', '28015');
+    maptype := ini.ReadString('Server Config', 'maptype', 'Barren');
+    serverip := ini.ReadString('ServerSettings', 'serverip', '0.0.0.0');
+    rconip := ini.ReadString('ServerSettings', 'rconip', '0.0.0.0');
+    saveinterval := ini.ReadString('ServerSettings', 'saveinterval', '300');
+    tickrate := StrToInt(ini.ReadString('ServerSettings', 'tickrate', '10'));
 
-      lblbranch.Caption := Branch;
-      lbledtservername.Text := servername;
-      lbledtserverdescription.Text := description;
-      lbledtserverurl.Text := serverurl;
-      lbledtserverbanner.Text := serverbanner;
-      sedserverseed.Value := StrToInt(serverseed);
-      sedworldsize.Value := StrToInt(worldsize);
-      sedmaxplayers.Value := StrToInt(maxplayers);
-      lbledtserveridentity.Text := serveridentity;
-      lbledtrconpass.Text := rconpass;
-      lbledtrconport.Text := rconport;
-      lbledtserverport.Text := serverport;
-      lbledtserverip.Text := serverip;
-      lbledtrconip.Text := rconip;
-      sedsaveinterval.Value := StrToInt(saveinterval);
-      sedtickrate.Value := tickrate;
-      if maptype = 'Procedural Map' then
-        cbbmap.ItemIndex := 0;
-      if maptype = 'Barren' then
-        cbbmap.ItemIndex := 1;
-      if maptype = 'HapisIsland' then
-        cbbmap.ItemIndex := 2;
-      if maptype = 'SavasIslandp' then
-        cbbmap.ItemIndex := 3;
-      if maptype = 'SavasIsland_koth' then
-        cbbmap.ItemIndex := 4;
-      if maptype = 'CraggyIsland' then
-        cbbmap.ItemIndex := 5;
+    lblbranch.Caption := Branch;
+    lbledtservername.Text := servername;
+    lbledtserverdescription.Text := description;
+    lbledtserverurl.Text := serverurl;
+    lbledtserverbanner.Text := serverbanner;
+    sedserverseed.Value := StrToInt(serverseed);
+    sedworldsize.Value := StrToInt(worldsize);
+    sedmaxplayers.Value := StrToInt(maxplayers);
+    lbledtserveridentity.Text := serveridentity;
+    lbledtrconpass.Text := rconpass;
+    lbledtrconport.Text := rconport;
+    lbledtserverport.Text := serverport;
+    lbledtserverip.Text := serverip;
+    lbledtrconip.Text := rconip;
+    sedsaveinterval.Value := StrToInt(saveinterval);
+    sedtickrate.Value := tickrate;
+    if maptype = 'Procedural Map' then
+      cbbmap.ItemIndex := 0;
+    if maptype = 'Barren' then
+      cbbmap.ItemIndex := 1;
+    if maptype = 'HapisIsland' then
+      cbbmap.ItemIndex := 2;
+    if maptype = 'SavasIslandp' then
+      cbbmap.ItemIndex := 3;
+    if maptype = 'SavasIsland_koth' then
+      cbbmap.ItemIndex := 4;
+    if maptype = 'CraggyIsland' then
+      cbbmap.ItemIndex := 5;
 
-      rconweb := ini.ReadString('ServerSettings', 'rconweb', '1');
-      if rconweb = '1' then
-        tglswtchrconweb.State := tssOn
-      else
-        tglswtchrconweb.State := tssOff;
+    rconweb := ini.ReadString('ServerSettings', 'rconweb', '1');
+    if rconweb = '1' then
+      tglswtchrconweb.State := tssOn
+    else
+      tglswtchrconweb.State := tssOff;
 
-      globalchat := ini.ReadString('ServerSettings', 'globalchat', '1');
-      if globalchat = '1' then
-        tglswtchglobalchat.State := tsson
-      else
-        tglswtchglobalchat.State := tssOff;
+    globalchat := ini.ReadString('ServerSettings', 'globalchat', '1');
+    if globalchat = '1' then
+      tglswtchglobalchat.State := tssOn
+    else
+      tglswtchglobalchat.State := tssOff;
 
-      radiation := ini.ReadString('ServerSettings', 'radiation', '1');
-      if radiation = '1' then
-        tglswtchradiation.State := tsson
-      else
-        tglswtchradiation.State := tssOff;
+    radiation := ini.ReadString('ServerSettings', 'radiation', '1');
+    if radiation = '1' then
+      tglswtchradiation.State := tssOn
+    else
+      tglswtchradiation.State := tssOff;
 
-      eac := ini.ReadString('ServerSettings', 'easyanticheat', '1');
-      if eac = '1' then
-        tglswtcheac.State := tssOn
-      else
-        tglswtcheac.State := tssOff;
+    eac := ini.ReadString('ServerSettings', 'easyanticheat', '1');
+    if eac = '1' then
+      tglswtcheac.State := tssOn
+    else
+      tglswtcheac.State := tssOff;
 
-      vac := ini.ReadString('ServerSettings', 'secure', '1');
-      if vac = '1' then
-        tglswtchvac.State := tssOn
-      else
-        tglswtchvac.State := tssOff;
+    vac := ini.ReadString('ServerSettings', 'secure', '1');
+    if vac = '1' then
+      tglswtchvac.State := tssOn
+    else
+      tglswtchvac.State := tssOff;
 
-      pve := ini.ReadString('ServerSettings', 'pve', '0');
-      if pve = '1' then
-        tglswtchserverpve.State := tssOn
-      else
-        tglswtchserverpve.State := tssOff;
+    pve := ini.ReadString('ServerSettings', 'pve', '0');
+    if pve = '1' then
+      tglswtchserverpve.State := tssOn
+    else
+      tglswtchserverpve.State := tssOff;
 
-      stability := ini.ReadString('ServerSettings', 'stability', '1');
-      if stability = '1' then
-        tglswtchstability.State := tssOn
-      else
-        tglswtchstability.State := tssOff;
+    stability := ini.ReadString('ServerSettings', 'stability', '1');
+    if stability = '1' then
+      tglswtchstability.State := tssOn
+    else
+      tglswtchstability.State := tssOff;
 
-      aithink := ini.ReadString('ServerSettings', 'aithink', '1');
-      if aithink = '1' then
-        tglswtchaithink.State := tssOn
-      else
-        tglswtchaithink.State := tssOff;
+    aithink := ini.ReadString('ServerSettings', 'aithink', '1');
+    if aithink = '1' then
+      tglswtchaithink.State := tssOn
+    else
+      tglswtchaithink.State := tssOff;
 
-      aimove := ini.ReadString('ServerSettings', 'aimove', '1');
-      if aimove = '1' then
-        tglswtchaimove.State := tssOn
-      else
-        tglswtchaimove.State := tssOff;
+    aimove := ini.ReadString('ServerSettings', 'aimove', '1');
+    if aimove = '1' then
+      tglswtchaimove.State := tssOn
+    else
+      tglswtchaimove.State := tssOff;
 
-      instantcraft := ini.ReadString('ServerSettings', 'instantcraft', '0');
-      if instantcraft = '1' then
-        tglswtchinstantcraft.State := tssOn
-      else
-        tglswtchinstantcraft.State := tssOff;
+    instantcraft := ini.ReadString('ServerSettings', 'instantcraft', '0');
+    if instantcraft = '1' then
+      tglswtchinstantcraft.State := tssOn
+    else
+      tglswtchinstantcraft.State := tssOff;
 
-      antihack := ini.ReadString('ServerSettings', 'antihack', '1');
-      if antihack = '1' then
-        tglswtchantihack.State := tssOn
-      else
-        tglswtchantihack.State := tssOff;
+    antihack := ini.ReadString('ServerSettings', 'antihack', '1');
+    if antihack = '1' then
+      tglswtchantihack.State := tssOn
+    else
+      tglswtchantihack.State := tssOff;
 
-      decay := ini.ReadString('ServerSettings', 'decay', '1');
-      if decay = '1' then
-        tglswtchdecay.State := tssOn
-      else
-        tglswtchdecay.State := tssOff;
+    decay := ini.ReadString('ServerSettings', 'decay', '1');
+    if decay = '1' then
+      tglswtchdecay.State := tssOn
+    else
+      tglswtchdecay.State := tssOff;
 
-      scientist := ini.ReadString('ServerSettings', 'scientist', '0');
-      if scientist = '1' then
-        tglswtchscientist.State := tssOn
-      else
-        tglswtchscientist.State := tssOff;
+    scientist := ini.ReadString('ServerSettings', 'scientist', '0');
+    if scientist = '1' then
+      tglswtchscientist.State := tssOn
+    else
+      tglswtchscientist.State := tssOff;
 
-      bradley := ini.ReadString('ServerSettings', 'bradley', '1');
-      if bradley = '1' then
-        tglswtchbradley.State := tssOn
-      else
-        tglswtchbradley.State := tssOff;
+    bradley := ini.ReadString('ServerSettings', 'bradley', '1');
+    if bradley = '1' then
+      tglswtchbradley.State := tssOn
+    else
+      tglswtchbradley.State := tssOff;
 
-      nav_wait := ini.ReadString('ServerSettings', 'nav_wait', '0');
-      if nav_wait = '1' then
-        tglswtchnavwait.State := tssOn
-      else
-        tglswtchnavwait.State := tssOff;
+    nav_wait := ini.ReadString('ServerSettings', 'nav_wait', '0');
+    if nav_wait = '1' then
+      tglswtchnavwait.State := tssOn
+    else
+      tglswtchnavwait.State := tssOff;
 
-      tmrrefreshlatestversion.Enabled := chkchecklatestversion.Checked;
+    nav_disable := ini.ReadString('ServerSettings', 'nav_disable', '0');
+    if nav_disable = '1' then
+      tglswtchnavdisable.State := tssOn
+    else
+      tglswtchnavdisable.State := tssOff;
 
-      lblserveridentity.Caption := 'Active Server Identity: ' + serveridentity;
-      ActiveServer1.Caption := 'Active: ' + serveridentity;
-    finally
-      ini.Free;
-    end;
+    tmrrefreshlatestversion.Enabled := chkchecklatestversion.Checked;
+
+    lblserveridentity.Caption := 'Active Server Identity: ' + serveridentity;
+    ActiveServer1.Caption := 'Active: ' + serveridentity;
+  finally
+    ini.Free;
+  end;
 end;
 
 procedure Tfrmmain.lstserversDblClick(Sender: TObject);
 begin
   if lstservers.ItemIndex = -1 then
-    begin
-      //
-    end
+  begin
+    //
+  end
   else
-    begin
-      lbledtserveridentity.Text := lstservers.Items[lstservers.ItemIndex];
-      activeserver := lbledtserveridentity.Text;
+  begin
+    lbledtserveridentity.Text := lstservers.Items[lstservers.ItemIndex];
+    activeserver := lbledtserveridentity.Text;
 
-      if DirectoryExists('.\server\' + activeserver) then
-      begin
-        ini_settings := '.\server\' + activeserver + '\settings.ini';
-        lbledtserveridentity.Text := activeserver;
-        LoadSettings;
-      end
-      else
-      begin
-        ForceDirectories('.\server\' + activeserver);
-        ini_settings := '.\server\' + activeserver + '\settings.ini';
-        lbledtserveridentity.Text := activeserver;
-        // LoadSettings;
-      end;
+    if DirectoryExists('.\server\' + activeserver) then
+    begin
+      ini_settings := '.\server\' + activeserver + '\settings.ini';
+      lbledtserveridentity.Text := activeserver;
+      LoadSettings;
+    end
+    else
+    begin
+      ForceDirectories('.\server\' + activeserver);
+      ini_settings := '.\server\' + activeserver + '\settings.ini';
+      lbledtserveridentity.Text := activeserver;
+      // LoadSettings;
     end;
+  end;
 end;
 
 procedure Tfrmmain.MultiDownloader(link: string);
@@ -2196,7 +2303,7 @@ end;
 
 procedure Tfrmmain.OpenFolder(Folder: string);
 begin
-  ShellExecute(Application.Handle, nil, PChar(Folder), nil, nil, SW_NORMAL);
+  ShellExecute(Application.Handle, nil, Pchar(Folder), nil, nil, SW_NORMAL);
 end;
 
 procedure Tfrmmain.OpenURL(url: string);
@@ -2232,7 +2339,8 @@ end;
 
 procedure Tfrmmain.StartApplication(Application: string);
 begin
-  ShellExecute(self.WindowHandle,'open',PChar(Application),nil,nil, SW_SHOWNORMAL);
+  ShellExecute(self.WindowHandle, 'open', Pchar(Application), nil, nil,
+    SW_SHOWNORMAL);
 end;
 
 procedure Tfrmmain.StartServer1Click(Sender: TObject);
@@ -2299,6 +2407,7 @@ begin
 end;
 
 initialization
-  ReportMemoryLeaksOnShutdown := True;
+
+ReportMemoryLeaksOnShutdown := True;
 
 end.

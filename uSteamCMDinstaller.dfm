@@ -5,7 +5,7 @@ object frmsteamcmdinstaller: Tfrmsteamcmdinstaller
   BorderStyle = bsSingle
   Caption = 'Steamcmd Installer'
   ClientHeight = 62
-  ClientWidth = 290
+  ClientWidth = 227
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,13 +15,18 @@ object frmsteamcmdinstaller: Tfrmsteamcmdinstaller
   OldCreateOrder = False
   Position = poMainFormCenter
   OnShow = FormShow
+  DesignSize = (
+    227
+    62)
   PixelsPerInch = 96
   TextHeight = 19
   object pb1: TProgressBar
     Left = 8
     Top = 21
-    Width = 265
+    Width = 211
     Height = 17
+    Anchors = [akLeft, akTop, akRight]
     TabOrder = 0
+    ExplicitWidth = 265
   end
 end

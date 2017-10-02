@@ -17,6 +17,7 @@ type
   Tfrmoxidemodinstaller = class(TForm)
     pb1: TProgressBar;
     btn1: TButton;
+    lblprogress: TLabel;
     procedure FormShow(Sender: TObject);
     procedure btn1Click(Sender: TObject);
   private
@@ -58,7 +59,7 @@ constructor TDownload.Create(CreateSuspended: boolean; aurl, afilename: string);
 begin
   inherited Create(CreateSuspended);
   httpclient := TIdHTTP.Create(nil);
-  httpclient.Request.UserAgent := 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; SLCC1';
+  httpclient.Request.UserAgent := 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36';
   httpclient.IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(httpclient);
   httpclient.HandleRedirects := True;
   httpclient.OnWorkBegin := idhttp1WorkBegin;
@@ -102,6 +103,7 @@ var
 begin
   frmoxidemodinstaller.pb1.Position := progressbarstatus;
   frmoxidemodinstaller.Caption := 'Downloading...';
+  frmoxidemodinstaller.lblprogress.Caption := IntToStr(progressbarstatus) + ' / ' + IntToStr(maxprogressbar);
 end;
 
 procedure TDownload.SetMaxProgressBar;

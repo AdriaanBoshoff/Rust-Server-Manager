@@ -7,7 +7,7 @@ uses
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, SynEdit,
   SynMemo, Vcl.ComCtrls, SynEditHighlighter, SynHighlighterJSON,
-  SynEditMiscClasses, SynEditSearch, SynEditOptionsDialog;
+  SynEditMiscClasses, SynEditSearch, SynEditOptionsDialog, SynHighlighterCS;
 
 type
   Tfrmconfigeditor = class(TForm)
@@ -18,12 +18,15 @@ type
     btn4: TButton;
     chktabs: TCheckBox;
     chkwordwrap: TCheckBox;
-    synjsnsyn1: TSynJSONSyn;
+    synjsnsyndark: TSynJSONSyn;
     chklinenumbers: TCheckBox;
     FindDialog1: TFindDialog;
     btn1: TButton;
     synm1: TSynMemo;
-    chkoverride: TCheckBox;
+    synjsnsynlight: TSynJSONSyn;
+    rbdark: TRadioButton;
+    rblight: TRadioButton;
+    chkhighlightline: TCheckBox;
     procedure btn3Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btn2Click(Sender: TObject);
@@ -33,7 +36,9 @@ type
     procedure chklinenumbersClick(Sender: TObject);
     procedure btn1Click(Sender: TObject);
     procedure FindDialog1Find(Sender: TObject);
-    procedure chkoverrideClick(Sender: TObject);
+    procedure rbdarkClick(Sender: TObject);
+    procedure rblightClick(Sender: TObject);
+    procedure chkhighlightlineClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -76,12 +81,12 @@ begin
   Close;
 end;
 
-procedure Tfrmconfigeditor.chkoverrideClick(Sender: TObject);
+procedure Tfrmconfigeditor.chkhighlightlineClick(Sender: TObject);
 begin
-  if chkoverride.Checked = True then
-    synm1.Color := clBtnText
+  if chkhighlightline.Checked = True then
+    synm1.ActiveLineColor := clTeal
   else
-    synm1.Color := clWindow;
+    synm1.ActiveLineColor := clNone;
 end;
 
 procedure Tfrmconfigeditor.chklinenumbersClick(Sender: TObject);
@@ -165,6 +170,18 @@ procedure Tfrmconfigeditor.FormShow(Sender: TObject);
 begin
   synm1.Lines.LoadFromFile(sfolder + sfile);
   synm1.SetFocus;
+end;
+
+procedure Tfrmconfigeditor.rbdarkClick(Sender: TObject);
+begin
+  synm1.Highlighter := synjsnsyndark;
+  synm1.Color := clBtnText;
+end;
+
+procedure Tfrmconfigeditor.rblightClick(Sender: TObject);
+begin
+  synm1.Highlighter := synjsnsynlight;
+  synm1.Color := clWhite;
 end;
 
 end.
