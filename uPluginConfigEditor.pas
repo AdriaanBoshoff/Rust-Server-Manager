@@ -1,5 +1,5 @@
 unit uPluginConfigEditor;
-
+
 interface
 
 uses
@@ -7,12 +7,12 @@ uses
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, SynEdit,
   SynMemo, Vcl.ComCtrls, SynEditHighlighter, SynHighlighterJSON,
-  SynEditMiscClasses, SynEditSearch, SynEditOptionsDialog, SynHighlighterCS;
+  SynEditMiscClasses, SynEditSearch, SynEditOptionsDialog, SynHighlighterCS,
+  IniFiles;
 
 type
   Tfrmconfigeditor = class(TForm)
     btn2: TButton;
-    pnl1: TPanel;
     btn3: TButton;
     dlgFont1: TFontDialog;
     btn4: TButton;
@@ -27,6 +27,13 @@ type
     rbdark: TRadioButton;
     rblight: TRadioButton;
     chkhighlightline: TCheckBox;
+    dlgColor1: TColorDialog;
+    btn5: TButton;
+    pgc1: TPageControl;
+    tseditor: TTabSheet;
+    tssettings: TTabSheet;
+    pnl1: TPanel;
+    grpeditorsettings: TGroupBox;
     procedure btn3Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btn2Click(Sender: TObject);
@@ -39,12 +46,14 @@ type
     procedure rbdarkClick(Sender: TObject);
     procedure rblightClick(Sender: TObject);
     procedure chkhighlightlineClick(Sender: TObject);
+    procedure btn5Click(Sender: TObject);
+    procedure SaveSettingString(Section, Name, Value: string);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
     { Public declarations }
-    sfile: string;
-    sfolder: string;
+    sfile, sfolder, ini_RSMsettings: string;
     PreviousFoundPos: integer;
   end;
 
@@ -81,28 +90,58 @@ begin
   Close;
 end;
 
+procedure Tfrmconfigeditor.btn5Click(Sender: TObject);
+begin
+  if dlgColor1.Execute then
+  begin
+    synm1.ActiveLineColor := dlgColor1.Color;
+    SaveSettingString('Syntax Editor', 'active_line_color',
+      ColorToString(dlgColor1.Color));
+  end;
+end;
+
 procedure Tfrmconfigeditor.chkhighlightlineClick(Sender: TObject);
 begin
   if chkhighlightline.Checked = True then
-    synm1.ActiveLineColor := clTeal
+  begin
+    synm1.ActiveLineColor := clTeal;
+    SaveSettingString('Syntax Editor', 'highlight_active_line',
+      BoolToStr(True));
+  end
   else
+  begin
     synm1.ActiveLineColor := clNone;
+    SaveSettingString('Syntax Editor', 'highlight_active_line',
+      BoolToStr(False));
+  end;
 end;
 
 procedure Tfrmconfigeditor.chklinenumbersClick(Sender: TObject);
 begin
   if chklinenumbers.Checked then
-    synm1.Gutter.ShowLineNumbers := True
+  begin
+    synm1.Gutter.ShowLineNumbers := True;
+    SaveSettingString('Syntax Editor', 'show_line_numbers', BoolToStr(True));
+  end
   else
+  begin
     synm1.Gutter.ShowLineNumbers := False;
+    SaveSettingString('Syntax Editor', 'show_line_numbers', BoolToStr(False));
+  end;
 end;
 
 procedure Tfrmconfigeditor.chktabsClick(Sender: TObject);
 begin
   if chktabs.Checked then
-    synm1.WantTabs := True
+  begin
+    synm1.WantTabs := True;
+    SaveSettingString('Syntax Editor', 'want_tabs', BoolToStr(True));
+  end
   else
+  begin
     synm1.WantTabs := False;
+    SaveSettingString('Syntax Editor', 'want_tabs', BoolToStr(False));
+  end;
 end;
 
 procedure Tfrmconfigeditor.chkwordwrapClick(Sender: TObject);
@@ -111,11 +150,13 @@ begin
   begin
     synm1.WordWrap := True;
     synm1.ScrollBars := ssVertical;
+    SaveSettingString('Syntax Editor', 'word_wrap', BoolToStr(True));
   end
   else
   begin
     synm1.WordWrap := False;
-    synm1.ScrollBars := ssBoth
+    synm1.ScrollBars := ssBoth;
+    SaveSettingString('Syntax Editor', 'word_wrap', BoolToStr(False));
   end
 end;
 
@@ -166,9 +207,15 @@ begin
   // ShowMessage('Could not find "' + FindDialog1.FindText + '"');
 end;
 
+procedure Tfrmconfigeditor.FormCreate(Sender: TObject);
+begin
+  ini_RSMsettings := '.\RSMsettings.ini';
+end;
+
 procedure Tfrmconfigeditor.FormShow(Sender: TObject);
 begin
   synm1.Lines.LoadFromFile(sfolder + sfile);
+  pgc1.ActivePageIndex := 0;
   synm1.SetFocus;
 end;
 
@@ -176,12 +223,27 @@ procedure Tfrmconfigeditor.rbdarkClick(Sender: TObject);
 begin
   synm1.Highlighter := synjsnsyndark;
   synm1.Color := clBtnText;
+  SaveSettingString('Syntax Editor', 'theme', 'dark');
 end;
 
 procedure Tfrmconfigeditor.rblightClick(Sender: TObject);
 begin
   synm1.Highlighter := synjsnsynlight;
   synm1.Color := clWhite;
+  SaveSettingString('Syntax Editor', 'theme', 'light');
+end;
+
+procedure Tfrmconfigeditor.SaveSettingString(Section, Name, Value: string);
+var
+  ini: TiniFile;
+begin
+  ini := TiniFile.Create(ini_RSMsettings);
+  try
+    ini.WriteString(Section, Name, Value);
+  finally
+    ini.Free;
+  end;
 end;
 
 end.
+
