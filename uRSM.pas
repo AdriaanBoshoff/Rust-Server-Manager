@@ -121,7 +121,6 @@ type
     trckbrtransparency: TTrackBar;
     lblversion: TLabel;
     idhtp1: TIdHTTP;
-    chkloadcustomtheme: TCheckBox;
     sedsaveinterval: TSpinEdit;
     lblsaveinterval: TLabel;
     btnoxidebrowser: TButton;
@@ -224,6 +223,13 @@ type
     lbl12: TLabel;
     tglswtchnavdisable: TToggleSwitch;
     apnlytcs1: TAppAnalytics;
+    grpsteamcmd: TGroupBox;
+    edtsteamcmdpath: TEdit;
+    lblsteamcmdpath: TLabel;
+    flpndlg1: TFileOpenDialog;
+    btn1: TButton;
+    tserrors: TTabSheet;
+    mmoerrors: TMemo;
     procedure btncancelClick(Sender: TObject);
     function KillTask(ExeFileName: string): Integer;
     procedure btninstalloxidemodClick(Sender: TObject);
@@ -305,7 +311,6 @@ type
     procedure DeleteDirectory(const Name: string);
     procedure lbledtserveridentityKeyPress(Sender: TObject; var Key: Char);
     procedure lbl1Click(Sender: TObject);
-    procedure ActiveServer1Click(Sender: TObject);
     procedure StartServer1Click(Sender: TObject);
     procedure WipeOptions1Click(Sender: TObject);
     procedure ConnecttoServer1Click(Sender: TObject);
@@ -322,6 +327,8 @@ type
     procedure BackupNow1Click(Sender: TObject);
     procedure cLOSE1Click(Sender: TObject);
     procedure chklstpluginsDblClick(Sender: TObject);
+    procedure edtsteamcmdpathChange(Sender: TObject);
+    procedure btn1Click(Sender: TObject);
   private
     { Private declarations }
     // Server Options variables
@@ -330,7 +337,7 @@ type
     nav_wait, nav_disable: string;
   public
     { Public declarations }
-    ini_settings, ini_RSMsettings, Branch: String;
+    ini_settings, ini_RSMsettings, Branch, steamcmdpath: String;
     servername, description, serverurl, serverbanner, saveinterval: string;
     serverseed, worldsize, maxplayers, serveridentity, rconip,
       activeserver: string;
@@ -350,11 +357,6 @@ implementation
 procedure Tfrmmain.btnexportinstallerlogClick(Sender: TObject);
 begin
   mmoinstaller.Lines.SaveToFile('installer.log');
-end;
-
-procedure Tfrmmain.ActiveServer1Click(Sender: TObject);
-begin
-  // ShowMessage('The active server is ' + serveridentity);
 end;
 
 procedure Tfrmmain.BackupNow1Click(Sender: TObject);
@@ -434,6 +436,12 @@ end;
 procedure Tfrmmain.btn15Click(Sender: TObject);
 begin
   OpenURL('https://www.youtube.com/channel/UCcTPklJvT-3u0e7K6HBKYvw');
+end;
+
+procedure Tfrmmain.btn1Click(Sender: TObject);
+begin
+  if flpndlg1.Execute then
+    edtsteamcmdpath.Text := flpndlg1.FileName;
 end;
 
 procedure Tfrmmain.btnselectbackuppathClick(Sender: TObject);
@@ -600,6 +608,20 @@ begin
   frmextradownload.ShowModal;
 end;
 
+procedure Tfrmmain.edtsteamcmdpathChange(Sender: TObject);
+begin
+  if FileExists(edtsteamcmdpath.Text) then
+  begin
+    lblsteamcmdpath.Caption := 'Found steamcmd.exe';
+    lblsteamcmdpath.Font.Color := clLime;
+  end
+  else
+  begin
+    lblsteamcmdpath.Caption := 'Could not find steamcmd.exe';
+    lblsteamcmdpath.Font.Color := clRed;
+  end;
+end;
+
 procedure Tfrmmain.EnableDisablePlugins1Click(Sender: TObject);
 begin
   btnenabledisableplugins.Click;
@@ -690,7 +712,8 @@ begin
   begin
     frmconfigeditor.sfolder := '.\server\' + serveridentity + '\oxide\data\';
     frmconfigeditor.sfile := chklstdata.Items[chklstdata.ItemIndex];
-    frmconfigeditor.Caption := 'Syntax Editor (' + chklstdata.Items[chklstdata.ItemIndex] + ')';
+    frmconfigeditor.Caption := 'Syntax Editor (' + chklstdata.Items
+      [chklstdata.ItemIndex] + ')';
     frmconfigeditor.ShowModal;
   end;
 end;
@@ -701,7 +724,8 @@ begin
   begin
     frmconfigeditor.sfolder := '.\server\' + serveridentity + '\oxide\plugins\';
     frmconfigeditor.sfile := chklstplugins.Items[chklstplugins.ItemIndex];
-    frmconfigeditor.Caption := 'Syntax Editor (' + chklstplugins.Items[chklstplugins.ItemIndex] + ')';
+    frmconfigeditor.Caption := 'Syntax Editor (' + chklstplugins.Items
+      [chklstplugins.ItemIndex] + ')';
     frmconfigeditor.ShowModal;
   end;
 end;
@@ -717,7 +741,8 @@ begin
   begin
     frmconfigeditor.sfolder := '.\server\' + serveridentity + '\oxide\config\';
     frmconfigeditor.sfile := chklstconfigs.Items[chklstconfigs.ItemIndex];
-    frmconfigeditor.Caption := 'Syntax Editor (' + chklstconfigs.Items[chklstconfigs.ItemIndex] + ')';
+    frmconfigeditor.Caption := 'Syntax Editor (' + chklstconfigs.Items
+      [chklstconfigs.ItemIndex] + ')';
     frmconfigeditor.ShowModal;
   end;
 end;
@@ -727,192 +752,200 @@ var
   command: TStringList;
   ini: TIniFile;
 begin
-  mmoinstaller.Clear;
-  Branch := SelectServerBranch;
-
-  if frminstalleroption.install = True then
+  if FileExists(steamcmdpath) then
   begin
-    lblbranch.Caption := Branch;
+    mmoinstaller.Clear;
+    Branch := SelectServerBranch;
 
-    if Branch = 'normal' then
+    if frminstalleroption.install = True then
     begin
+      lblbranch.Caption := Branch;
 
-      ini := TIniFile.Create(ini_RSMsettings);
-      try
-        ini.WriteString('Application Settings', 'Branch', Branch);
-      finally
-        ini.Free;
-      end;
-
-      if FileExists('.\steamcmd\steamcmd.exe') then
+      if Branch = 'normal' then
       begin
-        btncancel.Click;
-        dscmnd1.Stop;
-        command := TStringList.Create;
+
+        ini := TIniFile.Create(ini_RSMsettings);
         try
-          command.Clear;
-          command.Add('@echo off');
-          command.Add('echo Starting Installation...');
-          command.Add('.\steamcmd' +
-            '\steamcmd.exe +login anonymous +force_install_dir "' +
-            GetCurrentDir + '" +app_update 258550 +quit');
-          command.Add('echo Done');
-          command.SaveToFile('UpdateInstall.bat');
+          ini.WriteString('Application Settings', 'Branch', Branch);
         finally
-          command.Free
+          ini.Free;
         end;
 
-        dscmnd1.CommandLine := 'UpdateInstall.bat';
-        dscmnd1.OutputLines := mmoinstaller.Lines;
-        dscmnd1.Execute;
-      end
-      else
-        ShowMessage
-          ('It seems that steamcmd is not installed. Please click Install SteamCMD below');
+        if FileExists(steamcmdpath) then
+        begin
+          btncancel.Click;
+          dscmnd1.Stop;
+          command := TStringList.Create;
+          try
+            command.Clear;
+            command.Add('@echo off');
+            command.Add('echo Starting Installation...');
+            command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' +
+              GetCurrentDir + '" +app_update 258550 +quit');
+            command.Add('echo Done');
+            command.SaveToFile('UpdateInstall.bat');
+          finally
+            command.Free
+          end;
+
+          dscmnd1.CommandLine := 'UpdateInstall.bat';
+          dscmnd1.OutputLines := mmoinstaller.Lines;
+          dscmnd1.Execute;
+        end
+        else
+          ShowMessage
+            ('It seems that steamcmd is not installed. Please click Install SteamCMD below');
+      end;
+
+      if Branch = 'staging' then
+      begin
+        ini := TIniFile.Create(ini_RSMsettings);
+        try
+          ini.WriteString('Application Settings', 'Branch', Branch);
+        finally
+          ini.Free;
+        end;
+
+        if FileExists(steamcmdpath) then
+        begin
+          btncancel.Click;
+          dscmnd1.Stop;
+          command := TStringList.Create;
+          try
+            command.Clear;
+            command.Add('@echo off');
+            command.Add('echo Starting Installation...');
+            command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' +
+              GetCurrentDir + '" +app_update 258550 -beta staging +quit');
+            command.Add('echo Done');
+            command.SaveToFile('UpdateInstall.bat');
+          finally
+            command.Free
+          end;
+
+          dscmnd1.CommandLine := 'UpdateInstall.bat';
+          dscmnd1.OutputLines := mmoinstaller.Lines;
+          dscmnd1.Execute;
+        end
+        else
+          ShowMessage
+            ('It seems that steamcmd is not installed. Please click Install SteamCMD below');
+      end;
+
+      if Branch = 'prerelease' then
+      begin
+        ini := TIniFile.Create(ini_RSMsettings);
+        try
+          ini.WriteString('Application Settings', 'Branch', Branch);
+        finally
+          ini.Free;
+        end;
+
+        if FileExists(steamcmdpath) then
+        begin
+          btncancel.Click;
+          dscmnd1.Stop;
+          command := TStringList.Create;
+          try
+            command.Clear;
+            command.Add('@echo off');
+            command.Add('echo Starting Installation...');
+            command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' +
+              GetCurrentDir + '" +app_update 258550 -beta prerelease +quit');
+            command.Add('echo Done');
+            command.SaveToFile('UpdateInstall.bat');
+          finally
+            command.Free
+          end;
+
+          dscmnd1.CommandLine := 'UpdateInstall.bat';
+          dscmnd1.OutputLines := mmoinstaller.Lines;
+          dscmnd1.Execute;
+        end
+        else
+          ShowMessage
+            ('It seems that steamcmd is not installed. Please click Install SteamCMD below');
+      end;
+
+      if Branch = 'july2016' then
+      begin
+        ini := TIniFile.Create(ini_RSMsettings);
+        try
+          ini.WriteString('Application Settings', 'Branch', Branch);
+        finally
+          ini.Free;
+        end;
+
+        if FileExists(steamcmdpath) then
+        begin
+          btncancel.Click;
+          dscmnd1.Stop;
+          command := TStringList.Create;
+          try
+            command.Clear;
+            command.Add('@echo off');
+            command.Add('echo Starting Installation...');
+            command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' +
+              GetCurrentDir + '" +app_update 258550 -beta july2016 +quit');
+            command.Add('echo Done');
+            command.SaveToFile('UpdateInstall.bat');
+          finally
+            command.Free
+          end;
+
+          dscmnd1.CommandLine := 'UpdateInstall.bat';
+          dscmnd1.OutputLines := mmoinstaller.Lines;
+          dscmnd1.Execute;
+        end
+        else
+          ShowMessage
+            ('It seems that steamcmd is not installed. Please click Install SteamCMD below');
+      end;
+
+      if Branch = 'october2016' then
+      begin
+        ini := TIniFile.Create(ini_RSMsettings);
+        try
+          ini.WriteString('Application Settings', 'Branch', Branch);
+        finally
+          ini.Free;
+        end;
+
+        if FileExists(steamcmdpath) then
+        begin
+          btncancel.Click;
+          dscmnd1.Stop;
+          command := TStringList.Create;
+          try
+            command.Clear;
+            command.Add('@echo off');
+            command.Add('echo Starting Installation...');
+            command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' +
+              GetCurrentDir + '" +app_update 258550 -beta october2016 +quit');
+            command.Add('echo Done');
+            command.SaveToFile('UpdateInstall.bat');
+          finally
+            command.Free
+          end;
+
+          dscmnd1.CommandLine := 'UpdateInstall.bat';
+          dscmnd1.OutputLines := mmoinstaller.Lines;
+          dscmnd1.Execute;
+        end
+        else
+          ShowMessage
+            ('It seems that steamcmd is not installed. Please click Install SteamCMD below');
+      end;
     end;
-
-    if Branch = 'staging' then
+  end
+  else
+  begin
+    if MessageBox(Handle,
+      'SteamCMD does not apear to be installed. Would you like RSM to install it for you?',
+      Pchar(Application.Title), MB_OKCANCEL + MB_ICONINFORMATION) = IDOK then
     begin
-      ini := TIniFile.Create(ini_RSMsettings);
-      try
-        ini.WriteString('Application Settings', 'Branch', Branch);
-      finally
-        ini.Free;
-      end;
-
-      if FileExists('.\steamcmd\steamcmd.exe') then
-      begin
-        btncancel.Click;
-        dscmnd1.Stop;
-        command := TStringList.Create;
-        try
-          command.Clear;
-          command.Add('@echo off');
-          command.Add('echo Starting Installation...');
-          command.Add('.\steamcmd' +
-            '\steamcmd.exe +login anonymous +force_install_dir "' +
-            GetCurrentDir + '" +app_update 258550 -beta staging +quit');
-          command.Add('echo Done');
-          command.SaveToFile('UpdateInstall.bat');
-        finally
-          command.Free
-        end;
-
-        dscmnd1.CommandLine := 'UpdateInstall.bat';
-        dscmnd1.OutputLines := mmoinstaller.Lines;
-        dscmnd1.Execute;
-      end
-      else
-        ShowMessage
-          ('It seems that steamcmd is not installed. Please click Install SteamCMD below');
-    end;
-
-    if Branch = 'prerelease' then
-    begin
-      ini := TIniFile.Create(ini_RSMsettings);
-      try
-        ini.WriteString('Application Settings', 'Branch', Branch);
-      finally
-        ini.Free;
-      end;
-
-      if FileExists('.\steamcmd\steamcmd.exe') then
-      begin
-        btncancel.Click;
-        dscmnd1.Stop;
-        command := TStringList.Create;
-        try
-          command.Clear;
-          command.Add('@echo off');
-          command.Add('echo Starting Installation...');
-          command.Add('.\steamcmd' +
-            '\steamcmd.exe +login anonymous +force_install_dir "' +
-            GetCurrentDir + '" +app_update 258550 -beta prerelease +quit');
-          command.Add('echo Done');
-          command.SaveToFile('UpdateInstall.bat');
-        finally
-          command.Free
-        end;
-
-        dscmnd1.CommandLine := 'UpdateInstall.bat';
-        dscmnd1.OutputLines := mmoinstaller.Lines;
-        dscmnd1.Execute;
-      end
-      else
-        ShowMessage
-          ('It seems that steamcmd is not installed. Please click Install SteamCMD below');
-    end;
-
-    if Branch = 'july2016' then
-    begin
-      ini := TIniFile.Create(ini_RSMsettings);
-      try
-        ini.WriteString('Application Settings', 'Branch', Branch);
-      finally
-        ini.Free;
-      end;
-
-      if FileExists('.\steamcmd\steamcmd.exe') then
-      begin
-        btncancel.Click;
-        dscmnd1.Stop;
-        command := TStringList.Create;
-        try
-          command.Clear;
-          command.Add('@echo off');
-          command.Add('echo Starting Installation...');
-          command.Add('.\steamcmd' +
-            '\steamcmd.exe +login anonymous +force_install_dir "' +
-            GetCurrentDir + '" +app_update 258550 -beta july2016 +quit');
-          command.Add('echo Done');
-          command.SaveToFile('UpdateInstall.bat');
-        finally
-          command.Free
-        end;
-
-        dscmnd1.CommandLine := 'UpdateInstall.bat';
-        dscmnd1.OutputLines := mmoinstaller.Lines;
-        dscmnd1.Execute;
-      end
-      else
-        ShowMessage
-          ('It seems that steamcmd is not installed. Please click Install SteamCMD below');
-    end;
-
-    if Branch = 'october2016' then
-    begin
-      ini := TIniFile.Create(ini_RSMsettings);
-      try
-        ini.WriteString('Application Settings', 'Branch', Branch);
-      finally
-        ini.Free;
-      end;
-
-      if FileExists('.\steamcmd\steamcmd.exe') then
-      begin
-        btncancel.Click;
-        dscmnd1.Stop;
-        command := TStringList.Create;
-        try
-          command.Clear;
-          command.Add('@echo off');
-          command.Add('echo Starting Installation...');
-          command.Add('.\steamcmd' +
-            '\steamcmd.exe +login anonymous +force_install_dir "' +
-            GetCurrentDir + '" +app_update 258550 -beta october2016 +quit');
-          command.Add('echo Done');
-          command.SaveToFile('UpdateInstall.bat');
-        finally
-          command.Free
-        end;
-
-        dscmnd1.CommandLine := 'UpdateInstall.bat';
-        dscmnd1.OutputLines := mmoinstaller.Lines;
-        dscmnd1.Execute;
-      end
-      else
-        ShowMessage
-          ('It seems that steamcmd is not installed. Please click Install SteamCMD below');
+      btninstallsteamcmd.Click;
+      btninstallserver.Click;
     end;
   end;
 end;
@@ -944,12 +977,12 @@ begin
       BoolToStr(chksaveactivetab.Checked));
     ini.WriteString('Application Settings', 'transparency',
       IntToStr(trckbrtransparency.Position));
-    ini.WriteString('Application Settings', 'loadcustomtheme',
-      BoolToStr(chkloadcustomtheme.Checked));
     ini.WriteString('Application Settings', 'checklatestversion',
       BoolToStr(chkchecklatestversion.Checked));
     ini.WriteString('Application Settings', 'loadlangfile',
       BoolToStr(chkloadlangfile.Checked));
+    ini.WriteString('Application Settings', 'steamcmd', edtsteamcmdpath.Text);
+    steamcmdpath := edtsteamcmdpath.Text;
   finally
     tmrrefreshlatestversion.Enabled := chkchecklatestversion.Checked;
     ini.Free;
@@ -975,7 +1008,7 @@ begin
   begin
     ShowMessage
       ('Plugin updater does not seem to be installed! You will be asked to download it after closing this window.');
-    MultiDownloader('http://41.185.91.51/RSM/PluginUpdater.zip');
+    MultiDownloader('https://inforcer25.co.za/nextcloud/index.php/s/4p034x5LKrtcwLX/download');
   end;
 
 end;
@@ -1030,7 +1063,7 @@ begin
   mmoinstaller.Clear;
 
   if Branch = 'normal' then
-    if FileExists('.\steamcmd\steamcmd.exe') then
+    if FileExists(steamcmdpath) then
     begin
       btncancel.Click;
       dscmnd1.Stop;
@@ -1039,8 +1072,7 @@ begin
         command.Clear;
         command.Add('@echo off');
         command.Add('echo Starting Validation...');
-        command.Add('.\steamcmd' +
-          '\steamcmd.exe +login anonymous +force_install_dir "' + GetCurrentDir
+        command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' + GetCurrentDir
           + '" +app_update 258550 validate +quit');
         command.Add('echo Done');
         command.SaveToFile('UpdateInstall.bat');
@@ -1058,7 +1090,7 @@ begin
 
   if Branch = 'staging' then
   begin
-    if FileExists('.\steamcmd\steamcmd.exe') then
+    if FileExists(steamcmdpath) then
     begin
       btncancel.Click;
       dscmnd1.Stop;
@@ -1067,8 +1099,7 @@ begin
         command.Clear;
         command.Add('@echo off');
         command.Add('echo Starting Validation...');
-        command.Add('.\steamcmd' +
-          '\steamcmd.exe +login anonymous +force_install_dir "' + GetCurrentDir
+        command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' + GetCurrentDir
           + '" +app_update 258550 -beta staging validate +quit');
         command.Add('echo Done');
         command.SaveToFile('UpdateInstall.bat');
@@ -1087,7 +1118,7 @@ begin
 
   if Branch = 'prerelease' then
   begin
-    if FileExists('.\steamcmd\steamcmd.exe') then
+    if FileExists(steamcmdpath) then
     begin
       btncancel.Click;
       dscmnd1.Stop;
@@ -1096,8 +1127,7 @@ begin
         command.Clear;
         command.Add('@echo off');
         command.Add('echo Starting Validation...');
-        command.Add('.\steamcmd' +
-          '\steamcmd.exe +login anonymous +force_install_dir "' + GetCurrentDir
+        command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' + GetCurrentDir
           + '" +app_update 258550 -beta prerelease validate +quit');
         command.Add('echo Done');
         command.SaveToFile('UpdateInstall.bat');
@@ -1116,7 +1146,7 @@ begin
 
   if Branch = 'july2016' then
   begin
-    if FileExists('.\steamcmd\steamcmd.exe') then
+    if FileExists(steamcmdpath) then
     begin
       btncancel.Click;
       dscmnd1.Stop;
@@ -1125,8 +1155,7 @@ begin
         command.Clear;
         command.Add('@echo off');
         command.Add('echo Starting Validation...');
-        command.Add('.\steamcmd' +
-          '\steamcmd.exe +login anonymous +force_install_dir "' + GetCurrentDir
+        command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' + GetCurrentDir
           + '" +app_update 258550 -beta july2016 validate +quit');
         command.Add('echo Done');
         command.SaveToFile('UpdateInstall.bat');
@@ -1145,7 +1174,7 @@ begin
 
   if Branch = 'october2016' then
   begin
-    if FileExists('.\steamcmd\steamcmd.exe') then
+    if FileExists(steamcmdpath) then
     begin
       btncancel.Click;
       dscmnd1.Stop;
@@ -1154,8 +1183,7 @@ begin
         command.Clear;
         command.Add('@echo off');
         command.Add('echo Starting Validation...');
-        command.Add('.\steamcmd' +
-          '\steamcmd.exe +login anonymous +force_install_dir "' + GetCurrentDir
+        command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' + GetCurrentDir
           + '" +app_update 258550 -beta october2016 validate +quit');
         command.Add('echo Done');
         command.SaveToFile('UpdateInstall.bat');
@@ -1508,7 +1536,7 @@ begin
       else
       begin
         ini.WriteString('ServerSettings', 'nav_disable', '0');
-        nav_disable:= '0';
+        nav_disable := '0';
       end;
 
     finally
@@ -1631,9 +1659,7 @@ begin
     LoadSettings;
   end;
 
-  if FileExists('libeay32.dll') and FileExists('ssleay32.dll') then
-    //
-  else
+  if not FileExists('libeay32.dll') and FileExists('ssleay32.dll') then
   begin
     DeleteFile('ssleay32.dll');
     DeleteFile('libeay32.dll');
@@ -2050,6 +2076,9 @@ begin
   begin
     ini := TIniFile.Create(ini_RSMsettings);
     try
+      steamcmdpath := ini.ReadString('Application Settings', 'steamcmd',
+        '.\steamcmd\steamcmd.exe');
+      edtsteamcmdpath.Text := steamcmdpath;
       activeserver := ini.ReadString('Application Settings', 'activeserver',
         'server1');
       lbledtserveridentity.Text := activeserver;
@@ -2072,10 +2101,6 @@ begin
       if chksaveactivetab.Checked = False then
         pgc1.ActivePageIndex := 0;
 
-      chkloadcustomtheme.Checked :=
-        StrToBool(ini.ReadString('Application Settings',
-        'loadcustomtheme', '0'));
-
       chkloadlangfile.Checked :=
         StrToBool(ini.ReadString('Application Settings', 'loadlangfile', '0'));
       if chkloadlangfile.Checked then
@@ -2089,14 +2114,6 @@ begin
             ('You have chosen to load the language file on start but there is nothing to load.');
       end;
 
-      if chkloadcustomtheme.Checked = True then
-      begin
-        if FileExists('theme.vsf') then
-        begin
-          TStyleManager.LoadFromFile('theme.vsf');
-          TStyleManager.SetStyle('theme');
-        end;
-      end;
       chkchecklatestversion.Checked :=
         StrToBool(ini.ReadString('Application Settings',
         'checklatestversion', '1'));
@@ -2290,7 +2307,6 @@ begin
       ForceDirectories('.\server\' + activeserver);
       ini_settings := '.\server\' + activeserver + '\settings.ini';
       lbledtserveridentity.Text := activeserver;
-      // LoadSettings;
     end;
   end;
 end;
