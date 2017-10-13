@@ -1,5 +1,5 @@
 # Rust Server Manager
-Rust Server Manager is now back on github.
+Powerful tool for creating Dedicated Rust Servers on Windows.
 
 <h2>Features</h2>
 <ul>
@@ -8,7 +8,6 @@ Rust Server Manager is now back on github.
   <li>Plugin Manager (Edit, Update, Enable / Disable, Install, Delete)</li>
   <li>Auto Backup (Backup your server to your desired location every x amount of minutes)</li>
   <li>Application Settings (Themes, Transparency and more settings)</li>
-  <li>Upnp Port Forwarding (Attempts to forward your ports for you)</li>
   <li>Multi Server Support (Create more than 1 server with each having their own plugins)</li>
 </ul>
 
@@ -21,6 +20,5 @@ Rust Server Manager is now back on github.
 <h2>Extra Components</h2>
 <ul>
   <li><a href="https://github.com/TurboPack-Tokyo/DOSCommand">Dos Command</a></li>
-  <li><a href="https://github.com/RRUZ/vcl-styles-utils">VCL Styles Utils</a></li>
   <li><a href="https://github.com/TurboPack/SynEdit">SynEdit</a></li>
 </ul>
