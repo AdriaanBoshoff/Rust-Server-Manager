@@ -129,13 +129,13 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <AppEnableHighDPI>true</AppEnableHighDPI>
-        <VerInfo_Keys>CompanyName=Inforcer25 inc.;FileDescription=Server Manager for Rust;FileVersion=2.8.0.0;InternalName=Rust Server Manager;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=Rust Server Manager;ProductVersion=2.8.0.0;Comments=;ProgramID=Rust Server Manager</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Inforcer25 inc.;FileDescription=Server Manager for Rust;FileVersion=3.6.0.0;InternalName=Rust Server Manager;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=Rust Server Manager;ProductVersion=3.6.0.0;Comments=;ProgramID=Rust Server Manager</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <UWP_DelphiLogo44>C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\Image\rust___icon_by_blagoicons-d72pie6.png</UWP_DelphiLogo44>
-        <VerInfo_MajorVer>2</VerInfo_MajorVer>
+        <VerInfo_MajorVer>3</VerInfo_MajorVer>
         <UWP_DelphiLogo150>C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\Image\rust___icon_by_blagoicons-d72pie6.png</UWP_DelphiLogo150>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_MinorVer>8</VerInfo_MinorVer>
+        <VerInfo_MinorVer>6</VerInfo_MinorVer>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -224,8 +224,6 @@
                 </Source>
                 <Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclIntraweb_140_250.bpl">IntraWeb 14.0 Design Package for RAD Studio XE6</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\bcboffice2k250.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\bcbofficexp250.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k250.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp250.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>

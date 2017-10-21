@@ -230,6 +230,8 @@ type
     btn1: TButton;
     tserrors: TTabSheet;
     mmoerrors: TMemo;
+    lbl13: TLabel;
+    tglswtchplusbackup: TToggleSwitch;
     procedure btncancelClick(Sender: TObject);
     function KillTask(ExeFileName: string): Integer;
     procedure btninstalloxidemodClick(Sender: TObject);
@@ -329,6 +331,9 @@ type
     procedure chklstpluginsDblClick(Sender: TObject);
     procedure edtsteamcmdpathChange(Sender: TObject);
     procedure btn1Click(Sender: TObject);
+    procedure SaveSettingString(Section, Name, Value: string);
+    procedure cbbmapChange(Sender: TObject);
+    procedure tglswtchplusbackupClick(Sender: TObject);
   private
     { Private declarations }
     // Server Options variables
@@ -701,6 +706,22 @@ begin
   lbledtbackuppath.Enabled := True;
 end;
 
+procedure Tfrmmain.cbbmapChange(Sender: TObject);
+begin
+  if cbbmap.ItemIndex = 0 then
+  begin
+    sedserverseed.Enabled := True;
+    btngenerate.Enabled := True;
+    sedworldsize.Enabled := True;
+  end
+  else
+  begin
+    sedserverseed.Enabled := False;
+    btngenerate.Enabled := False;
+    sedworldsize.Enabled := False;
+  end;
+end;
+
 procedure Tfrmmain.cbbthemelistChange(Sender: TObject);
 begin
   TStyleManager.SetStyle(cbbthemelist.Text);
@@ -780,8 +801,8 @@ begin
             command.Clear;
             command.Add('@echo off');
             command.Add('echo Starting Installation...');
-            command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' +
-              GetCurrentDir + '" +app_update 258550 +quit');
+            command.Add(steamcmdpath + ' +login anonymous +force_install_dir "'
+              + GetCurrentDir + '" +app_update 258550 +quit');
             command.Add('echo Done');
             command.SaveToFile('UpdateInstall.bat');
           finally
@@ -815,8 +836,8 @@ begin
             command.Clear;
             command.Add('@echo off');
             command.Add('echo Starting Installation...');
-            command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' +
-              GetCurrentDir + '" +app_update 258550 -beta staging +quit');
+            command.Add(steamcmdpath + ' +login anonymous +force_install_dir "'
+              + GetCurrentDir + '" +app_update 258550 -beta staging +quit');
             command.Add('echo Done');
             command.SaveToFile('UpdateInstall.bat');
           finally
@@ -850,8 +871,8 @@ begin
             command.Clear;
             command.Add('@echo off');
             command.Add('echo Starting Installation...');
-            command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' +
-              GetCurrentDir + '" +app_update 258550 -beta prerelease +quit');
+            command.Add(steamcmdpath + ' +login anonymous +force_install_dir "'
+              + GetCurrentDir + '" +app_update 258550 -beta prerelease +quit');
             command.Add('echo Done');
             command.SaveToFile('UpdateInstall.bat');
           finally
@@ -885,8 +906,8 @@ begin
             command.Clear;
             command.Add('@echo off');
             command.Add('echo Starting Installation...');
-            command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' +
-              GetCurrentDir + '" +app_update 258550 -beta july2016 +quit');
+            command.Add(steamcmdpath + ' +login anonymous +force_install_dir "'
+              + GetCurrentDir + '" +app_update 258550 -beta july2016 +quit');
             command.Add('echo Done');
             command.SaveToFile('UpdateInstall.bat');
           finally
@@ -920,8 +941,8 @@ begin
             command.Clear;
             command.Add('@echo off');
             command.Add('echo Starting Installation...');
-            command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' +
-              GetCurrentDir + '" +app_update 258550 -beta october2016 +quit');
+            command.Add(steamcmdpath + ' +login anonymous +force_install_dir "'
+              + GetCurrentDir + '" +app_update 258550 -beta october2016 +quit');
             command.Add('echo Done');
             command.SaveToFile('UpdateInstall.bat');
           finally
@@ -945,6 +966,7 @@ begin
       Pchar(Application.Title), MB_OKCANCEL + MB_ICONINFORMATION) = IDOK then
     begin
       btninstallsteamcmd.Click;
+      steamcmdpath := '.\steamcmd\steamcmd.exe';
       btninstallserver.Click;
     end;
   end;
@@ -991,7 +1013,7 @@ end;
 
 procedure Tfrmmain.btn23Click(Sender: TObject);
 begin
-  OpenURL('https://twitter.com/inforcer25');
+  OpenURL('https://inforcer25.co.za/');
 end;
 
 procedure Tfrmmain.btnpluginupdaterClick(Sender: TObject);
@@ -1008,7 +1030,8 @@ begin
   begin
     ShowMessage
       ('Plugin updater does not seem to be installed! You will be asked to download it after closing this window.');
-    MultiDownloader('https://inforcer25.co.za/nextcloud/index.php/s/4p034x5LKrtcwLX/download');
+    MultiDownloader
+      ('https://inforcer25.co.za/nextcloud/index.php/s/4p034x5LKrtcwLX/download');
   end;
 
 end;
@@ -1043,6 +1066,9 @@ end;
 procedure Tfrmmain.btninstallsteamcmdClick(Sender: TObject);
 begin
   frmsteamcmdinstaller.ShowModal;
+  steamcmdpath := '.\steamcmd\steamcmd.exe';
+  SaveSettingString('Application Settings', 'steamcmd', steamcmdpath);
+  edtsteamcmdpath.Text := steamcmdpath;
 end;
 
 procedure Tfrmmain.btnupdateClick(Sender: TObject);
@@ -1072,8 +1098,8 @@ begin
         command.Clear;
         command.Add('@echo off');
         command.Add('echo Starting Validation...');
-        command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' + GetCurrentDir
-          + '" +app_update 258550 validate +quit');
+        command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' +
+          GetCurrentDir + '" +app_update 258550 validate +quit');
         command.Add('echo Done');
         command.SaveToFile('UpdateInstall.bat');
       finally
@@ -1099,8 +1125,8 @@ begin
         command.Clear;
         command.Add('@echo off');
         command.Add('echo Starting Validation...');
-        command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' + GetCurrentDir
-          + '" +app_update 258550 -beta staging validate +quit');
+        command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' +
+          GetCurrentDir + '" +app_update 258550 -beta staging validate +quit');
         command.Add('echo Done');
         command.SaveToFile('UpdateInstall.bat');
       finally
@@ -1127,8 +1153,9 @@ begin
         command.Clear;
         command.Add('@echo off');
         command.Add('echo Starting Validation...');
-        command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' + GetCurrentDir
-          + '" +app_update 258550 -beta prerelease validate +quit');
+        command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' +
+          GetCurrentDir +
+          '" +app_update 258550 -beta prerelease validate +quit');
         command.Add('echo Done');
         command.SaveToFile('UpdateInstall.bat');
       finally
@@ -1155,8 +1182,8 @@ begin
         command.Clear;
         command.Add('@echo off');
         command.Add('echo Starting Validation...');
-        command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' + GetCurrentDir
-          + '" +app_update 258550 -beta july2016 validate +quit');
+        command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' +
+          GetCurrentDir + '" +app_update 258550 -beta july2016 validate +quit');
         command.Add('echo Done');
         command.SaveToFile('UpdateInstall.bat');
       finally
@@ -1183,8 +1210,9 @@ begin
         command.Clear;
         command.Add('@echo off');
         command.Add('echo Starting Validation...');
-        command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' + GetCurrentDir
-          + '" +app_update 258550 -beta october2016 validate +quit');
+        command.Add(steamcmdpath + ' +login anonymous +force_install_dir "' +
+          GetCurrentDir +
+          '" +app_update 258550 -beta october2016 validate +quit');
         command.Add('echo Done');
         command.SaveToFile('UpdateInstall.bat');
       finally
@@ -1243,6 +1271,8 @@ begin
     commands.Add('+decay.scale ' + decay + ' ^');
     commands.Add('+nav_grid ' + scientist + ' ^');
     commands.Add('+bradley.enabled ' + bradley + ' ^');
+    if tglswtchplusbackup.State = tssOn then
+      commands.Add('+backup' + ' ^');
     commands.Add('+nav_wait ' + nav_wait + ' ^');
     commands.Add('+nav_disable ' + nav_disable);
 
@@ -1262,7 +1292,16 @@ begin
   if FileExists('RustDedicated.exe') then
     WinExec('start.bat', SW_SHOWNORMAL)
   else
-    ShowMessage('Could not find RustDedicated.exe! Is the server installed?');
+  begin
+    if MessageBox(Handle,
+      'The Server does not seem to be installed. Would you like RSM to install it for you?',
+      Pchar(Application.Title), MB_YESNO + MB_ICONINFORMATION) = IDYES then
+    begin
+      pgc1.ActivePageIndex := 2;
+      btninstallserver.Click;
+    end;
+
+  end;
 
   lstservers.Clear;
   GetDirList('.\server');
@@ -1537,6 +1576,15 @@ begin
       begin
         ini.WriteString('ServerSettings', 'nav_disable', '0');
         nav_disable := '0';
+      end;
+
+      if tglswtchplusbackup.State = tssOn then
+      begin
+        ini.WriteString('ServerSettings', 'plusbackup', '1');
+      end
+      else
+      begin
+        ini.WriteString('ServerSettings', 'plusbackup', '0');
       end;
 
     finally
@@ -2276,6 +2324,11 @@ begin
     else
       tglswtchnavdisable.State := tssOff;
 
+    if ini.ReadString('ServerSettings', 'plusbackup', '0') = '1' then
+      tglswtchplusbackup.State := tssOn
+    else
+      tglswtchplusbackup.State := tssOff;
+
     tmrrefreshlatestversion.Enabled := chkchecklatestversion.Checked;
 
     lblserveridentity.Caption := 'Active Server Identity: ' + serveridentity;
@@ -2342,6 +2395,18 @@ begin
   OpenURL('http://oxidemod.org/plugins/categories/rust.24/?order=rating_weighted');
 end;
 
+procedure Tfrmmain.SaveSettingString(Section, Name, Value: string);
+var
+  ini: TIniFile;
+begin
+  ini := TIniFile.Create(ini_RSMsettings);
+  try
+    ini.WriteString(Section, Name, Value);
+  finally
+    ini.Free;
+  end;
+end;
+
 function Tfrmmain.SelectServerBranch: string;
 begin
   frminstalleroption.ShowModal;
@@ -2367,6 +2432,14 @@ end;
 procedure Tfrmmain.Stop1Click(Sender: TObject);
 begin
   btnstopbackup.Click;
+end;
+
+procedure Tfrmmain.tglswtchplusbackupClick(Sender: TObject);
+begin
+  if tglswtchplusbackup.State = tssOn then
+    sedsaveinterval.Enabled := True
+  else
+    sedsaveinterval.Enabled := False;
 end;
 
 procedure Tfrmmain.tmrbackupTimer(Sender: TObject);
