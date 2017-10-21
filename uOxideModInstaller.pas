@@ -99,11 +99,13 @@ end;
 
 procedure TDownload.UpdateProgressBar;
 var
-  ZipFile: string;
+  total: Real;
 begin
   frmoxidemodinstaller.pb1.Position := progressbarstatus;
   frmoxidemodinstaller.Caption := 'Downloading...';
-  frmoxidemodinstaller.lblprogress.Caption := IntToStr(progressbarstatus) + ' / ' + IntToStr(maxprogressbar);
+  total := progressbarstatus / maxprogressbar * 100;
+  total := Round(total);
+  frmoxidemodinstaller.lblprogress.Caption := FloatToStr(total) + ' %';
 end;
 
 procedure TDownload.SetMaxProgressBar;
