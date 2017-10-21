@@ -101,10 +101,6 @@ begin
     begin
       TZipFile.ExtractZipFile(ZipFile, ExtractPath);
       DeleteFile(ZipFile);
-      DeleteFile('HashInfo.txt');
-      DeleteFile('OpenSSL License.txt');
-      DeleteFile('openssl.exe');
-      DeleteFile('ReadMe.txt');
       frmextradownload.Caption := 'Done.';
       frmextradownload.btn1.Enabled := True;
     end
@@ -143,7 +139,7 @@ var
   DownloadThread: TDownload;
   link: string;
 begin
-  link := 'http://inforcer25.co.za/extra.zip';
+  link := 'http://inforcer25.co.za/nextcloud/index.php/s/KPXMfoUKQKrbaQU/download';
   DownloadThread := TDownload.Create(true, link, 'extra.zip');
   DownloadThread.FreeOnTerminate := true;
   DownloadThread.Start;
