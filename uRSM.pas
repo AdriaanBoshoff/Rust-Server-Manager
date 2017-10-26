@@ -1613,6 +1613,7 @@ begin
   if dscmnd1.IsRunning then
     dscmnd1.Stop;
   KillTask('steamcmd.exe');
+  mmoinstaller.Lines.Clear;
 end;
 
 procedure Tfrmmain.FormActivate(Sender: TObject);
