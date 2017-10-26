@@ -41,19 +41,19 @@ object frmwipe: Tfrmwipe
       TabOrder = 1
       OnClick = btn2Click
     end
-    object chk1: TCheckBox
-      Left = 108
-      Top = 7
-      Width = 233
-      Height = 27
-      Caption = 'I want my server to be wiped'
+    object chkbpwipe: TCheckBox
+      Left = 89
+      Top = 6
+      Width = 97
+      Height = 29
+      Caption = 'Wipe BP'
       TabOrder = 2
     end
   end
   object lst1: TListBox
     Left = 0
     Top = 41
-    Width = 233
+    Width = 224
     Height = 162
     Align = alLeft
     ItemHeight = 19
@@ -70,12 +70,15 @@ object frmwipe: Tfrmwipe
     TabOrder = 2
   end
   object chklstdata: TCheckListBox
-    Left = 233
+    Left = 224
     Top = 41
-    Width = 215
+    Width = 224
     Height = 162
     Align = alClient
     ItemHeight = 19
     TabOrder = 3
+    ExplicitLeft = 378
+    ExplicitTop = -149
+    ExplicitWidth = 215
   end
 end

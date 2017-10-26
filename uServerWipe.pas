@@ -16,8 +16,8 @@ type
     btn1: TButton;
     btn2: TButton;
     pnl2: TPanel;
-    chk1: TCheckBox;
     chklstdata: TCheckListBox;
+    chkbpwipe: TCheckBox;
     procedure GetDirList(sPath: string);
     procedure btn2Click(Sender: TObject);
     procedure DeleteFilesMatchingPattern(const Directory, Pattern: string);
@@ -25,6 +25,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure btn1Click(Sender: TObject);
     procedure lst1Click(Sender: TObject);
+    procedure DeleteDirectory(const Name: string);
   private
     { Private declarations }
   public
@@ -48,7 +49,9 @@ procedure Tfrmwipe.btn2Click(Sender: TObject);
 var
   I: Integer;
 begin
-  if chk1.Checked then
+  if MessageDlg('You are about to wipe ' + serveridentity +
+    ' along with the checked data.' + sLineBreak + ' Do you want to continue?',
+    mtWarning, [mbYes, mbNo], 0) = mrYes then
   begin
     if lst1.ItemIndex = -1 then
     begin
@@ -61,24 +64,49 @@ begin
       ShowMessage('Server has been wiped along with the selected data!');
       Close;
     end;
-  end
-  else
-    ShowMessage
-      ('You need to accept the fact that you know your server will be wiped!');
 
-  if chk1.Checked then
-  begin
     for I := 0 to chklstdata.Items.Count - 1 do
     begin
       if chklstdata.Checked[I] then
       begin
-        DeleteFile('.\server\' + serveridentity + '\oxide\data\' + chklstdata.Items.Strings[I]);
+        DeleteFile('.\server\' + serveridentity + '\oxide\data\' +
+          chklstdata.Items.Strings[I]);
       end;
     end;
-  end
-  else
-    ShowMessage
-      ('You need to accept the fact that you know your server will be wiped!');
+
+    if chkbpwipe.Checked then
+    begin
+      DeleteDirectory('.\server\' + serveridentity + '\user');
+    end;
+
+  end;
+end;
+
+procedure Tfrmwipe.DeleteDirectory(const Name: string);
+var
+  F: TSearchRec;
+begin
+  if FindFirst(Name + '\*', faAnyFile, F) = 0 then
+  begin
+    try
+      repeat
+        if (F.Attr and faDirectory <> 0) then
+        begin
+          if (F.Name <> '.') and (F.Name <> '..') then
+          begin
+            DeleteDirectory(Name + '\' + F.Name);
+          end;
+        end
+        else
+        begin
+          DeleteFile(Name + '\' + F.Name);
+        end;
+      until FindNext(F) <> 0;
+    finally
+      FindClose(F);
+    end;
+    RemoveDir(Name);
+  end;
 end;
 
 procedure Tfrmwipe.DeleteFilesMatchingPattern(const Directory, Pattern: string);
@@ -138,10 +166,11 @@ end;
 procedure Tfrmwipe.lst1Click(Sender: TObject);
 begin
   if lst1.ItemIndex <> -1 then
-    begin
-      chklstdata.Clear;
-      ListFileDir('.\server\' + lst1.Items.Strings[lst1.ItemIndex] + '\oxide\data\', chklstdata.Items);
-    end;
+  begin
+    chklstdata.Clear;
+    ListFileDir('.\server\' + lst1.Items.Strings[lst1.ItemIndex] +
+      '\oxide\data\', chklstdata.Items);
+  end;
 end;
 
 end.
