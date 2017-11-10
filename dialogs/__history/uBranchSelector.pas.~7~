@@ -1,0 +1,44 @@
+unit uBranchSelector;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls;
+
+type
+  Tfrmbranchselector = class(TForm)
+    btnok: TButton;
+    btncancel: TButton;
+    pnl1: TPanel;
+    rgbranches: TRadioGroup;
+    procedure btncancelClick(Sender: TObject);
+    procedure btnokClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    branch: Integer;
+  end;
+
+var
+  frmbranchselector: Tfrmbranchselector;
+
+implementation
+
+{$R *.dfm}
+
+procedure Tfrmbranchselector.btncancelClick(Sender: TObject);
+begin
+  ModalResult := mrCancel;
+  Close;
+end;
+
+procedure Tfrmbranchselector.btnokClick(Sender: TObject);
+begin
+  ModalResult := mrOk;
+  branch := rgbranches.ItemIndex;
+  Close;
+end;
+
+end.

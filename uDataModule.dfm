@@ -1,5 +1,13 @@
-object DataModule1: TDataModule1
+object dmDataModule: TdmDataModule
   OldCreateOrder = False
-  Height = 150
-  Width = 215
+  OnCreate = DataModuleCreate
+  Height = 554
+  Width = 649
+  object dlgOpensteamcmd: TOpenDialog
+    DefaultExt = 'steamcmd.exe'
+    FileName = 'steamcmd.exe'
+    Filter = 'steamcmd.exe|steamcmd.exe'
+    Left = 352
+    Top = 296
+  end
 end

@@ -1,37 +1,34 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>2017/07/01 03:11:48.000.048,C:\Users\adria\Documents\Embarcadero\Studio\Projects\Rust Server Manager - Style Eq\uWelcome.pas=</Transaction>
-    <Transaction>2017/07/01 20:57:47.000.030,=C:\Users\adria\Documents\Embarcadero\Studio\Projects\Rust Server Manager - Style Eq\Unit2.pas</Transaction>
-    <Transaction>2017/07/01 20:58:04.000.392,C:\Users\adria\Documents\Embarcadero\Studio\Projects\Rust Server Manager - Style Eq\Unit2.pas=C:\Users\adria\Documents\Embarcadero\Studio\Projects\Rust Server Manager - Style Eq\uPluginEnableDisable.pas</Transaction>
-    <Transaction>2017/07/01 20:58:04.000.392,C:\Users\adria\Documents\Embarcadero\Studio\Projects\Rust Server Manager - Style Eq\Unit2.dfm=C:\Users\adria\Documents\Embarcadero\Studio\Projects\Rust Server Manager - Style Eq\uPluginEnableDisable.dfm</Transaction>
-    <Transaction>2017/07/09 15:37:49.000.519,=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\Unit2.pas</Transaction>
-    <Transaction>2017/07/09 15:38:01.000.012,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\Unit2.pas=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\uDownload.pas</Transaction>
-    <Transaction>2017/07/09 15:38:01.000.012,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\Unit2.dfm=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\uDownload.dfm</Transaction>
-    <Transaction>2017/07/10 01:57:56.000.986,=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\Unit2.pas</Transaction>
-    <Transaction>2017/07/10 01:58:09.000.778,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\Unit2.dfm=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\uCustomStart.dfm</Transaction>
-    <Transaction>2017/07/10 01:58:09.000.778,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\Unit2.pas=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\uCustomStart.pas</Transaction>
-    <Transaction>2017/07/10 22:40:56.000.799,=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\Unit2.pas</Transaction>
-    <Transaction>2017/07/10 22:41:12.000.734,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\uPriority.dfm=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\Unit2.dfm</Transaction>
-    <Transaction>2017/07/10 22:41:12.000.734,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\uPriority.pas=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\src\Unit2.pas</Transaction>
-    <Transaction>2017/07/23 18:56:43.000.878,=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\Extras\Rust.ttf</Transaction>
-    <Transaction>2017/07/23 19:02:52.000.982,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\Extras\Rust.ttf=</Transaction>
-    <Transaction>2017/08/02 15:23:48.000.026,=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\Unit1.pas</Transaction>
-    <Transaction>2017/08/02 15:23:58.000.245,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\uUpdater.dfm=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\Unit1.dfm</Transaction>
-    <Transaction>2017/08/02 15:23:58.000.245,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\uUpdater.pas=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\Unit1.pas</Transaction>
-    <Transaction>2017/08/02 15:25:43.000.955,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\uUpdater.pas=</Transaction>
-    <Transaction>2017/08/02 21:42:34.000.711,=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\Unit1.pas</Transaction>
-    <Transaction>2017/08/02 21:42:41.000.245,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\Unit1.dfm=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\uUpnp.dfm</Transaction>
-    <Transaction>2017/08/02 21:42:41.000.245,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\Unit1.pas=C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\uUpnp.pas</Transaction>
-    <Transaction>2017/08/25 22:38:57.000.224,C:\Users\adria\OneDrive\Projects (Delphi)\Rust-Server-Manager-master\uPriority.pas=</Transaction>
-    <Transaction>2017/09/10 09:26:34.000.587,C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\uSteamCMDinstaller.pas=</Transaction>
-    <Transaction>2017/09/10 09:27:36.000.481,=C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\Unit1.pas</Transaction>
-    <Transaction>2017/09/10 09:27:45.000.347,C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\uSteamCMDinstaller.dfm=C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\Unit1.dfm</Transaction>
-    <Transaction>2017/09/10 09:27:45.000.347,C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\uSteamCMDinstaller.pas=C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\Unit1.pas</Transaction>
-    <Transaction>2017/09/25 19:16:48.000.035,C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\Vcl Styles Equalizer (Tool)\uVclStylesEQU.pas=</Transaction>
-    <Transaction>2017/09/25 19:16:51.000.590,C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\Vcl Styles Equalizer (Tool)\uVCLStylesInfo.pas=</Transaction>
-    <Transaction>2017/09/25 19:17:28.000.877,C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\Extras\PngFunctions.pas=</Transaction>
-    <Transaction>2017/09/25 19:17:31.000.355,C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\Extras\PngImageList.pas=</Transaction>
-    <Transaction>2017/09/26 14:35:55.000.600,C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\uUpnp.pas=</Transaction>
+    <Transaction>2017/11/06 14:16:55.000.760,=C:\Users\adria\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2017/11/06 14:17:15.000.212,C:\Users\adria\Documents\Embarcadero\Studio\Projects\Unit1.pas=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\uMain.pas</Transaction>
+    <Transaction>2017/11/06 14:17:15.000.212,C:\Users\adria\Documents\Embarcadero\Studio\Projects\Unit1.dfm=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\uMain.dfm</Transaction>
+    <Transaction>2017/11/06 14:17:22.000.353,C:\Users\adria\Documents\Embarcadero\Studio\Projects\Project1.dproj=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\pRSM.dproj</Transaction>
+    <Transaction>2017/11/06 14:40:15.000.084,=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\Unit1.pas</Transaction>
+    <Transaction>2017/11/06 14:40:26.000.323,C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\uDataModule.dfm=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\Unit1.dfm</Transaction>
+    <Transaction>2017/11/06 14:40:26.000.323,C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\uDataModule.pas=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\Unit1.pas</Transaction>
+    <Transaction>2017/11/06 14:40:51.000.441,=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\ABOUT.pas</Transaction>
+    <Transaction>2017/11/06 14:41:03.000.696,C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\uAbout.dfm=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\ABOUT.dfm</Transaction>
+    <Transaction>2017/11/06 14:41:03.000.696,C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\uAbout.pas=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\ABOUT.pas</Transaction>
+    <Transaction>2017/11/06 14:42:23.000.023,C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\uAbout.pas=</Transaction>
+    <Transaction>2017/11/06 15:38:52.000.483,=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\Unit1.pas</Transaction>
+    <Transaction>2017/11/06 15:39:04.000.535,C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\Unit1.dfm=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\downloaders\uNormal.dfm</Transaction>
+    <Transaction>2017/11/06 15:39:04.000.535,C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\Unit1.pas=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\downloaders\uNormal.pas</Transaction>
+    <Transaction>2017/11/06 15:46:37.000.890,=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\Unit1.pas</Transaction>
+    <Transaction>2017/11/06 15:46:48.000.811,C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\Unit1.pas=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\downloaders\uSSL.pas</Transaction>
+    <Transaction>2017/11/06 15:46:48.000.811,C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\Unit1.dfm=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\downloaders\uSSL.dfm</Transaction>
+    <Transaction>2017/11/06 20:51:14.000.563,=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\Unit1.pas</Transaction>
+    <Transaction>2017/11/06 20:54:33.000.167,C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\dialogs\uBranchSelector.pas=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\Unit1.pas</Transaction>
+    <Transaction>2017/11/06 20:54:33.000.167,C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\dialogs\uBranchSelector.dfm=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\Unit1.dfm</Transaction>
+    <Transaction>2017/11/07 17:49:00.000.132,=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\Unit1.pas</Transaction>
+    <Transaction>2017/11/07 17:49:59.000.756,C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\dialogs\uServerCreator.pas=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\Unit1.pas</Transaction>
+    <Transaction>2017/11/07 17:49:59.000.756,C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\dialogs\uServerCreator.dfm=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\Unit1.dfm</Transaction>
+    <Transaction>2017/11/08 20:21:01.000.448,=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\dialogs\uServerWipe.pas</Transaction>
+    <Transaction>2017/11/08 23:50:19.000.285,=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\dialogs\uServerDescription.pas</Transaction>
+    <Transaction>2017/11/08 23:50:28.000.514,C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\dialogs\uServerDescription.dfm=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\dialogs\uServerDescriptionEditor.dfm</Transaction>
+    <Transaction>2017/11/08 23:50:28.000.514,C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\dialogs\uServerDescription.pas=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\dialogs\uServerDescriptionEditor.pas</Transaction>
+    <Transaction>2017/11/10 12:35:38.097,=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\dialogs\uPluginEnableDisable.pas</Transaction>
+    <Transaction>2017/11/10 12:37:47.394,=C:\Users\adria\OneDrive\Projects (Delphi)\RSM new\dialogs\uPluginConfigEditor.pas</Transaction>
   </Transactions>
 </BorlandProject>

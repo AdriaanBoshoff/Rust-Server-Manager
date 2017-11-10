@@ -1,0 +1,77 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  BorderStyle = bsDialog
+  Caption = 'Select a Server Branch'
+  ClientHeight = 276
+  ClientWidth = 277
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -16
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poMainFormCenter
+  PixelsPerInch = 96
+  TextHeight = 19
+  object pnl1: TPanel
+    Left = 0
+    Top = 239
+    Width = 277
+    Height = 37
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 0
+    ExplicitTop = 342
+    ExplicitWidth = 373
+    DesignSize = (
+      277
+      37)
+    object btnok: TButton
+      Left = 109
+      Top = 6
+      Width = 75
+      Height = 25
+      Anchors = [akTop, akRight]
+      Caption = 'OK'
+      Default = True
+      ModalResult = 1
+      TabOrder = 0
+      OnClick = btnokClick
+      ExplicitLeft = 205
+    end
+    object btncancel: TButton
+      Left = 196
+      Top = 6
+      Width = 75
+      Height = 25
+      Anchors = [akTop, akRight]
+      Cancel = True
+      Caption = 'Cancel'
+      ModalResult = 2
+      TabOrder = 1
+      OnClick = btncancelClick
+      ExplicitLeft = 292
+    end
+  end
+  object rgbranches: TRadioGroup
+    Left = 0
+    Top = 0
+    Width = 277
+    Height = 239
+    Align = alClient
+    Caption = 'Select a server Branch'
+    Items.Strings = (
+      'Normal (Recommended)'
+      'Staging'
+      'Pre-Release'
+      'July 2016 (Old Blueprint System)'
+      'October 2016 (XP System)')
+    TabOrder = 1
+    ExplicitLeft = 128
+    ExplicitTop = 96
+    ExplicitWidth = 185
+    ExplicitHeight = 105
+  end
+end
