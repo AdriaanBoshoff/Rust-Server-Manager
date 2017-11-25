@@ -7,7 +7,7 @@ Powerful tool for creating Dedicated Rust Servers on Windows.
   <li>Server Installer with oxidemod installer</li>
   <li>Plugin Manager (Edit, Update, Enable / Disable, Install, Delete)</li>
   <li>Auto Backup (Backup your server to your desired location every x amount of minutes)</li>
-  <li>Application Settings (Themes, Transparency and more settings)</li>
+  <li>Application Settings</li>
   <li>Multi Server Support (Create more than 1 server with each having their own plugins)</li>
 </ul>
 
