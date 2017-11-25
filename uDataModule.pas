@@ -3,11 +3,14 @@ unit uDataModule;
 interface
 
 uses
-  System.SysUtils, System.Classes, Vcl.Dialogs, IniFiles, Vcl.Menus;
+  System.SysUtils, System.Classes, Vcl.Dialogs, IniFiles, Vcl.Menus,
+  System.ImageList, Vcl.ImgList, Vcl.Controls, FolderDialog, Tlhelp32;
 
 type
   TdmDataModule = class(TDataModule)
     dlgOpensteamcmd: TOpenDialog;
+    imglst: TImageList;
+    fldrdlgautobackup: TFolderDialog;
     procedure DataModuleCreate(Sender: TObject);
     function LoadSettingString(Section, Name, Value: string): string;
     procedure SaveSettingString(Section, Name, Value: string);

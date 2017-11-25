@@ -1,0 +1,92 @@
+unit uDataModule;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, Vcl.Dialogs, IniFiles, Vcl.Menus,
+  System.ImageList, Vcl.ImgList, Vcl.Controls, FolderDialog, Tlhelp32;
+
+type
+  TdmDataModule = class(TDataModule)
+    dlgOpensteamcmd: TOpenDialog;
+    imglst: TImageList;
+    fldrdlgautobackup: TFolderDialog;
+    procedure DataModuleCreate(Sender: TObject);
+    function LoadSettingString(Section, Name, Value: string): string;
+    procedure SaveSettingString(Section, Name, Value: string);
+    function KillTask(ExeFileName: string): Integer;
+  private
+    { Private declarations }
+  public
+    //dsfsf
+  end;
+
+var
+  dmDataModule: TdmDataModule;
+  ini_rsm_settings, ini_server_config, steamcmdpath, serveridentity: string;
+
+implementation
+
+{%CLASSGROUP 'Vcl.Controls.TControl'}
+
+{$R *.dfm}
+
+procedure TdmDataModule.DataModuleCreate(Sender: TObject);
+begin
+  ini_rsm_settings := '.\rsm-config.ini';
+
+  serveridentity := LoadSettingString('Application Settings', 'serveridentity', 'default');
+
+  ini_server_config := '.\server\' + serveridentity + '\rsm-server-config.ini';
+
+  steamcmdpath := LoadSettingString('Application Settings', 'steamcmd', 'steamcmd\steamcmd.exe');
+end;
+
+function TdmDataModule.KillTask(ExeFileName: string): Integer;
+const
+  PROCESS_TERMINATE = $0001;
+var
+  ContinueLoop: BOOL;
+  FSnapshotHandle: THandle;
+  FProcessEntry32: TProcessEntry32;
+begin
+  Result := 0;
+  FSnapshotHandle := CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+  FProcessEntry32.dwSize := sizeof(FProcessEntry32);
+  ContinueLoop := Process32First(FSnapshotHandle, FProcessEntry32);
+
+  while Integer(ContinueLoop) <> 0 do
+  begin
+    if ((UpperCase(ExtractFileName(FProcessEntry32.szExeFile)) = UpperCase(ExeFileName)) or (UpperCase(FProcessEntry32.szExeFile) = UpperCase(ExeFileName))) then
+      Result := Integer(TerminateProcess(OpenProcess(PROCESS_TERMINATE, BOOL(0), FProcessEntry32.th32ProcessID), 0));
+    ContinueLoop := Process32Next(FSnapshotHandle, FProcessEntry32);
+  end;
+  CloseHandle(FSnapshotHandle);
+end;
+
+function TdmDataModule.LoadSettingString(Section, Name, Value: string): string;
+var
+  ini: TiniFile;
+begin
+  ini := TIniFile.Create(ini_rsm_settings);
+  try
+    Result := ini.ReadString(Section, Name, Value);
+  finally
+    ini.Free;
+  end;
+end;
+
+procedure TdmDataModule.SaveSettingString(Section, Name, Value: string);
+var
+  ini: TiniFile;
+begin
+  ini := TIniFile.Create(ini_rsm_settings);
+  try
+    ini.WriteString(Section, Name, Value);
+  finally
+    ini.Free;
+  end;
+end;
+
+end.
+

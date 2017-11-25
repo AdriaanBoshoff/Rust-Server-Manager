@@ -1,0 +1,126 @@
+unit uOxideModBrowser;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Buttons, Vcl.ExtCtrls,
+  Vcl.StdCtrls, uDataModule, Vcl.OleCtrls, SHDocVw, Vcl.ComCtrls;
+
+type
+  TfrmOxideModBrowser = class(TForm)
+    pnltop: TPanel;
+    btnback: TButton;
+    btnforward: TButton;
+    btnrefresh: TButton;
+    edturl: TEdit;
+    btnoxidemod: TButton;
+    wb1: TWebBrowser;
+    pb1: TProgressBar;
+    btnrust: TButton;
+    btnuniversal: TButton;
+    pnlbottom: TPanel;
+    procedure FormCreate(Sender: TObject);
+    procedure wb1NavigateComplete2(ASender: TObject; const pDisp: IDispatch; const URL: OleVariant);
+    procedure wb1ProgressChange(ASender: TObject; Progress, ProgressMax: Integer);
+    procedure btnbackClick(Sender: TObject);
+    procedure btnforwardClick(Sender: TObject);
+    procedure btnrefreshClick(Sender: TObject);
+    procedure btnoxidemodClick(Sender: TObject);
+    procedure btnrustClick(Sender: TObject);
+    procedure btnuniversalClick(Sender: TObject);
+    procedure edturlKeyPress(Sender: TObject; var Key: Char);
+    procedure wb1CommandStateChange(ASender: TObject; Command: Integer;
+      Enable: WordBool);
+    procedure FormShow(Sender: TObject);
+    procedure FormResize(Sender: TObject);
+  private
+    { Private declarations }
+    FDownCount: Integer;
+  public
+    { Public declarations }
+  end;
+
+var
+  frmOxideModBrowser: TfrmOxideModBrowser;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmOxideModBrowser.btnbackClick(Sender: TObject);
+begin
+  wb1.GoBack;
+end;
+
+procedure TfrmOxideModBrowser.btnforwardClick(Sender: TObject);
+begin
+  wb1.GoForward;
+end;
+
+procedure TfrmOxideModBrowser.btnoxidemodClick(Sender: TObject);
+begin
+  wb1.Navigate('http://oxidemod.org/plugins/');
+end;
+
+procedure TfrmOxideModBrowser.btnrefreshClick(Sender: TObject);
+begin
+  wb1.Refresh;
+end;
+
+procedure TfrmOxideModBrowser.btnrustClick(Sender: TObject);
+begin
+  wb1.Navigate('http://oxidemod.org/plugins/categories/rust.24/');
+end;
+
+procedure TfrmOxideModBrowser.btnuniversalClick(Sender: TObject);
+begin
+  wb1.Navigate('http://oxidemod.org/plugins/categories/universal.58/');
+end;
+
+procedure TfrmOxideModBrowser.edturlKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #13 then
+  begin
+    Key := #0;
+    wb1.Navigate(edturl.Text);
+  end;
+end;
+
+procedure TfrmOxideModBrowser.FormCreate(Sender: TObject);
+begin
+  wb1.Navigate('http://oxidemod.org/plugins/');
+end;
+
+procedure TfrmOxideModBrowser.FormResize(Sender: TObject);
+begin
+  frmOxideModBrowser.Caption := IntToStr(Height) + IntToStr(Width);
+end;
+
+procedure TfrmOxideModBrowser.FormShow(Sender: TObject);
+begin
+  pnlbottom.Caption := 'Save the plugin to: server\' +serveridentity + '\oxide\plugins';
+end;
+
+procedure TfrmOxideModBrowser.wb1CommandStateChange(ASender: TObject;
+  Command: Integer; Enable: WordBool);
+begin
+  case Command of
+    CSC_NAVIGATEBACK: btnback.Enabled := Enable;
+    CSC_NAVIGATEFORWARD: btnforward.Enabled := Enable;
+  end;
+end;
+
+procedure TfrmOxideModBrowser.wb1NavigateComplete2(ASender: TObject; const pDisp: IDispatch; const URL: OleVariant);
+begin
+  edturl.Text := wb1.LocationURL;
+end;
+
+procedure TfrmOxideModBrowser.wb1ProgressChange(ASender: TObject; Progress, ProgressMax: Integer);
+begin
+  pb1.Max := ProgressMax;
+  pb1.Position := Progress;
+end;
+
+end.
+

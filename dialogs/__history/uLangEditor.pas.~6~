@@ -1,0 +1,28 @@
+unit uLangEditor;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uDataModule, Vcl.StdCtrls, Vcl.ExtCtrls;
+
+type
+  TfrmLangEditor = class(TForm)
+    pnlbottom: TPanel;
+    btnsave: TButton;
+    btncancel: TButton;
+    lbledtchange: TLabeledEdit;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmLangEditor: TfrmLangEditor;
+
+implementation
+
+{$R *.dfm}
+
+end.

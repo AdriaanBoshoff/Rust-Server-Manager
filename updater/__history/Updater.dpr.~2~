@@ -1,0 +1,21 @@
+program Updater;
+
+uses
+  Vcl.Forms,
+  uUpdater in 'uUpdater.pas' {frmUpdater},
+  Vcl.Themes,
+  Vcl.Styles,
+  uDataModule in '..\uDataModule.pas' {dmDataModule: TDataModule},
+  uSSL in '..\downloaders\uSSL.pas' {frmssldownloader};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  TStyleManager.TrySetStyle('Material Black Pearl');
+  Application.CreateForm(TfrmUpdater, frmUpdater);
+  Application.CreateForm(TdmDataModule, dmDataModule);
+  Application.CreateForm(Tfrmssldownloader, frmssldownloader);
+  Application.Run;
+end.

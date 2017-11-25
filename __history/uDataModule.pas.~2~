@@ -1,0 +1,68 @@
+unit uDataModule;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, Vcl.Dialogs, IniFiles, Vcl.Menus,
+  System.ImageList, Vcl.ImgList, Vcl.Controls;
+
+type
+  TdmDataModule = class(TDataModule)
+    dlgOpensteamcmd: TOpenDialog;
+    imglst: TImageList;
+    procedure DataModuleCreate(Sender: TObject);
+    function LoadSettingString(Section, Name, Value: string): string;
+    procedure SaveSettingString(Section, Name, Value: string);
+  private
+    { Private declarations }
+  public
+    //dsfsf
+  end;
+
+var
+  dmDataModule: TdmDataModule;
+  ini_rsm_settings, ini_server_config, steamcmdpath, serveridentity: string;
+
+implementation
+
+{%CLASSGROUP 'Vcl.Controls.TControl'}
+
+{$R *.dfm}
+
+procedure TdmDataModule.DataModuleCreate(Sender: TObject);
+begin
+  ini_rsm_settings := '.\rsm-config.ini';
+
+  serveridentity := LoadSettingString('Application Settings', 'serveridentity', 'default');
+
+  ini_server_config := '.\server\' + serveridentity + '\rsm-server-config.ini';
+
+  steamcmdpath := LoadSettingString('Application Settings', 'steamcmd', 'steamcmd\steamcmd.exe');
+end;
+
+function TdmDataModule.LoadSettingString(Section, Name, Value: string): string;
+var
+  ini: TiniFile;
+begin
+  ini := TIniFile.Create(ini_rsm_settings);
+  try
+    Result := ini.ReadString(Section, Name, Value);
+  finally
+    ini.Free;
+  end;
+end;
+
+procedure TdmDataModule.SaveSettingString(Section, Name, Value: string);
+var
+  ini: TiniFile;
+begin
+  ini := TIniFile.Create(ini_rsm_settings);
+  try
+    ini.WriteString(Section, Name, Value);
+  finally
+    ini.Free;
+  end;
+end;
+
+end.
+

@@ -1,0 +1,19 @@
+program pUpdater;
+
+uses
+  Vcl.Forms,
+  uUpdater in 'uUpdater.pas' {frmUpdater},
+  Vcl.Themes,
+  Vcl.Styles,
+  uDataModule in '..\uDataModule.pas' {dmDataModule: TDataModule};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  TStyleManager.TrySetStyle('Material Black Pearl');
+  Application.CreateForm(TfrmUpdater, frmUpdater);
+  Application.CreateForm(TdmDataModule, dmDataModule);
+  Application.Run;
+end.

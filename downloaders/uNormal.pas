@@ -6,14 +6,14 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls,
   IdBaseComponent, IdComponent, IdTCPConnection, IdHTTP, System.Zip,
-  ActiveX, IdSSLOpenSSL;
+  ActiveX, IdSSLOpenSSL, AdvMetroProgressBar;
 
 type
   TDownload = class;
 
   Tfrmnormaldownloader = class(TForm)
-    pb1: TProgressBar;
     lblprogress: TLabel;
+    pb1: TAdvMetroProgressBar;
     procedure FormShow(Sender: TObject);
   private
     { Private declarations }

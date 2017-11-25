@@ -1,0 +1,20 @@
+program RSMupdater;
+
+uses
+  Vcl.Forms,
+  uUpdater in 'uUpdater.pas' {frmUpdater},
+  Vcl.Themes,
+  Vcl.Styles,
+  uDataModule in '..\uDataModule.pas' {dmDataModule: TDataModule},
+  uNormal in '..\downloaders\uNormal.pas' {frmnormaldownloader};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TfrmUpdater, frmUpdater);
+  Application.CreateForm(TdmDataModule, dmDataModule);
+  Application.CreateForm(Tfrmnormaldownloader, frmnormaldownloader);
+  Application.Run;
+end.

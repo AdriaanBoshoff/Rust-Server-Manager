@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2017/11/21 20:45:57.000.483,=C:\Users\adria\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2017/11/21 20:46:29.000.695,C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\updater\uUpdater.pas=C:\Users\adria\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2017/11/21 20:46:29.000.695,C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\updater\uUpdater.dfm=C:\Users\adria\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2017/11/21 20:46:37.000.014,C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\updater\pUpdater.dproj=C:\Users\adria\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2017/11/22 11:38:48.000.622,=C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\uDataModule.pas</Transaction>
+    <Transaction>2017/11/22 11:43:48.000.813,=C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\downloaders\uSSL.pas</Transaction>
+    <Transaction>2017/11/22 13:06:12.000.544,C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\updater\Updater.dproj=C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\updater\pUpdater.dproj</Transaction>
+    <Transaction>2017/11/22 19:18:59.000.011,=C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\downloaders\uNormal.pas</Transaction>
+    <Transaction>2017/11/22 19:19:08.000.077,C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\downloaders\uSSL.pas=</Transaction>
+    <Transaction>2017/11/22 19:25:20.000.575,C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\updater\Updater.dproj=C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\updater\RSMupdaer.dproj</Transaction>
+    <Transaction>2017/11/22 19:25:26.000.037,C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\updater\RSMupdaer.dproj=C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\updater\RSMupdater.dproj</Transaction>
+  </Transactions>
+</BorlandProject>

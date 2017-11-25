@@ -29,12 +29,12 @@ object frmssldownloader: Tfrmssldownloader
     Font.Style = []
     ParentFont = False
   end
-  object pb1: TProgressBar
+  object pb1: TAdvMetroProgressBar
     Left = 8
     Top = 8
     Width = 230
     Height = 25
-    Smooth = True
-    TabOrder = 0
+    Color = 3696371
+    Position = 0
   end
 end

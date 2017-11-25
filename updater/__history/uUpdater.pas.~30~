@@ -1,0 +1,104 @@
+unit uUpdater;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, htmlcomp, Vcl.ExtCtrls, Vcl.StdCtrls, IdHTTP, uDataModule,
+  Tlhelp32, ShellAPI, uNormal;
+
+type
+  TfrmUpdater = class(TForm)
+    pnlbottom: TPanel;
+    htpnlchangelog: THtPanel;
+    btnUpdate: TButton;
+    btnClose: TButton;
+    function GetChangelog(URL: string): String;
+    procedure btnUpdateClick(Sender: TObject);
+    procedure btnCloseClick(Sender: TObject);
+    function KillTask(ExeFileName: string): Integer;
+    procedure Download(Link, Path: string; Extract: Boolean; ExtractPath: string);
+    procedure FormCreate(Sender: TObject);
+    procedure Start(Path: string);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmUpdater: TfrmUpdater;
+
+implementation
+
+{$R *.dfm}
+
+{ TfrmUpdater }
+
+procedure TfrmUpdater.btnCloseClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TfrmUpdater.btnUpdateClick(Sender: TObject);
+begin
+  KillTask('RSM.exe');
+  Download('http://inforcer25.co.za/owncloud/index.php/s/RgoqYNTa4pv4wA4/download', '.\RSMnew.zip', True, '.\');
+  Start('RSM.exe');
+  Close;
+end;
+
+procedure TfrmUpdater.Download(Link, Path: string; Extract: Boolean;
+  ExtractPath: string);
+begin
+  frmnormaldownloader.Link := Link;
+  frmnormaldownloader.Path := Path;
+  frmnormaldownloader.Extract := Extract;
+  frmnormaldownloader.ExtractPath := ExtractPath;
+  frmnormaldownloader.ShowModal;
+  if frmnormaldownloader.error = True then
+    ShowMessage('Error downloading or extracting.');
+end;
+
+procedure TfrmUpdater.FormCreate(Sender: TObject);
+begin
+  htpnlchangelog.HTML.Text := GetChangelog('http://41.185.91.51/RSM/changelog.html');
+end;
+
+function TfrmUpdater.GetChangelog(URL: string): string;
+var
+  httpclient: TIdHTTP;
+begin
+  httpclient := TIdHTTP.Create;
+  Result := httpclient.Get(URL);
+  httpclient.Free;
+end;
+
+function TfrmUpdater.KillTask(ExeFileName: string): Integer;
+const
+  PROCESS_TERMINATE = $0001;
+var
+  ContinueLoop: BOOL;
+  FSnapshotHandle: THandle;
+  FProcessEntry32: TProcessEntry32;
+begin
+  Result := 0;
+  FSnapshotHandle := CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+  FProcessEntry32.dwSize := sizeof(FProcessEntry32);
+  ContinueLoop := Process32First(FSnapshotHandle, FProcessEntry32);
+
+  while Integer(ContinueLoop) <> 0 do
+  begin
+    if ((UpperCase(ExtractFileName(FProcessEntry32.szExeFile)) = UpperCase(ExeFileName)) or (UpperCase(FProcessEntry32.szExeFile) = UpperCase(ExeFileName))) then
+      Result := Integer(TerminateProcess(OpenProcess(PROCESS_TERMINATE, BOOL(0), FProcessEntry32.th32ProcessID), 0));
+    ContinueLoop := Process32Next(FSnapshotHandle, FProcessEntry32);
+  end;
+  CloseHandle(FSnapshotHandle);
+end;
+
+procedure TfrmUpdater.Start(Path: string);
+begin
+  ShellExecute(Self.WindowHandle, 'open', Pchar(Path), nil, nil, SW_SHOWNORMAL);
+end;
+
+end.

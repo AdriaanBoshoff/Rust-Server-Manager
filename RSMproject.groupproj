@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{0A100B81-B800-41BC-A582-C8462836640E}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="RSM.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="updater\RSMupdater.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="RSM">
+        <MSBuild Projects="RSM.dproj"/>
+    </Target>
+    <Target Name="RSM:Clean">
+        <MSBuild Projects="RSM.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="RSM:Make">
+        <MSBuild Projects="RSM.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="RSMupdater">
+        <MSBuild Projects="updater\RSMupdater.dproj"/>
+    </Target>
+    <Target Name="RSMupdater:Clean">
+        <MSBuild Projects="updater\RSMupdater.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="RSMupdater:Make">
+        <MSBuild Projects="updater\RSMupdater.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="RSM;RSMupdater"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="RSM:Clean;RSMupdater:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="RSM:Make;RSMupdater:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
