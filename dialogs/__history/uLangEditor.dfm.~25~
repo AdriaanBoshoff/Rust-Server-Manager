@@ -3,7 +3,7 @@ object frmLangEditor: TfrmLangEditor
   Top = 0
   BorderStyle = bsDialog
   Caption = 'Language Editor'
-  ClientHeight = 178
+  ClientHeight = 167
   ClientWidth = 339
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -16,22 +16,14 @@ object frmLangEditor: TfrmLangEditor
   OnShow = FormShow
   DesignSize = (
     339
-    178)
+    167)
   PixelsPerInch = 96
   TextHeight = 19
-  object lblsize: TLabel
-    Left = 8
-    Top = 79
-    Width = 70
-    Height = 19
-    Caption = 'Font Size:'
-    Layout = tlCenter
-  end
   object lblcomponentid: TLabel
-    Left = 8
-    Top = 113
-    Width = 153
-    Height = 17
+    Left = 89
+    Top = 139
+    Width = 12
+    Height = 16
     Caption = 'ID'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -40,16 +32,24 @@ object frmLangEditor: TfrmLangEditor
     Font.Style = []
     ParentFont = False
   end
+  object lblsize: TLabel
+    Left = 8
+    Top = 79
+    Width = 70
+    Height = 19
+    Caption = 'Font Size:'
+    Layout = tlCenter
+  end
   object pnlbottom: TPanel
     Left = 0
-    Top = 136
+    Top = 126
     Width = 339
-    Height = 42
+    Height = 41
     Align = alBottom
     TabOrder = 0
     DesignSize = (
       339
-      42)
+      41)
     object btnsave: TButton
       Left = 8
       Top = 8

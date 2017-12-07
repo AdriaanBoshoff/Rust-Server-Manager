@@ -1799,7 +1799,7 @@ var
 begin
   Registry := TRegistry.Create;
   try
-    Registry.RootKey := HKEY_CURRENT_USER; // or: HKEY_LOCAL_MACHINE
+    Registry.RootKey := HKEY_CURRENT_USER;
     if Registry.OpenKey(RegKey, False) then
     begin
       if bRegister = False then

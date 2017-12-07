@@ -11645,7 +11645,7 @@ object frmmain: Tfrmmain
       Width = 130
       Height = 38
       Hint = 'Shows who made RSM and displays the current version number'
-      Caption = 'Made by Quantum'#13#10'Version: 4.8.2'
+      Caption = 'Made by Quantum'#13#10'Version: 4.8.1'
     end
     object cbbserverlist: TComboBox
       Left = 11

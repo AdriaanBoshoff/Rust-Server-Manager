@@ -34,11 +34,11 @@ procedure TdmDataModule.DataModuleCreate(Sender: TObject);
 begin
   RSMdir := ExtractFileDir(ParamStr(0));
 
-  ini_rsm_settings := RSMdir + '\rsm-config.ini';
+  ini_rsm_settings := ParamStr(0) + 'rsm-config.ini';
 
   serveridentity := LoadSettingString('Application Settings', 'serveridentity', 'default');
 
-  ini_server_config := RSMdir + '\server\' + serveridentity + '\rsm-server-config.ini';
+  ini_server_config := ParamStr(0) + '\server\' + serveridentity + '\rsm-server-config.ini';
 
   steamcmdpath := LoadSettingString('Application Settings', 'steamcmd', 'steamcmd\steamcmd.exe');
 end;

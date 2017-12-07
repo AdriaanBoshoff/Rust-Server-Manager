@@ -137,9 +137,9 @@
         <UWP_DelphiLogo44>C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\images\icon_rust.png</UWP_DelphiLogo44>
         <UWP_DelphiLogo150>C:\Users\adria\OneDrive\Projects (Delphi)\Rust Server Manager\images\icon_rust.png</UWP_DelphiLogo150>
         <VerInfo_MajorVer>4</VerInfo_MajorVer>
-        <VerInfo_MinorVer>2</VerInfo_MinorVer>
+        <VerInfo_MinorVer>4</VerInfo_MinorVer>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Keys>CompanyName=;FileDescription=Rust Server Manager;FileVersion=4.2.0.0;InternalName=RSM;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=RSM;ProductName=Rust Server Manager;ProductVersion=4.2.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Quantum Software;FileDescription=Rust Server Manager;FileVersion=4.4.0.0;InternalName=RSM;LegalCopyright=;LegalTrademarks=;OriginalFilename=RSM;ProgramID=RSM;ProductName=Rust Server Manager;ProductVersion=4.4.0.0;Comments=</VerInfo_Keys>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -263,12 +263,6 @@
                 <DeployFile LocalName="Win64\Debug\RSM.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win64">
                         <RemoteName>RSM.exe</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="Win64\Debug\RSM.rsm" Configuration="Debug" Class="DebugSymbols">
-                    <Platform Name="Win64">
-                        <RemoteName>RSM.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

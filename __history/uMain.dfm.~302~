@@ -11645,7 +11645,7 @@ object frmmain: Tfrmmain
       Width = 130
       Height = 38
       Hint = 'Shows who made RSM and displays the current version number'
-      Caption = 'Made by Quantum'#13#10'Version: 4.8.2'
+      Caption = 'Made by Quantum'#13#10'Version: 4.8'
     end
     object cbbserverlist: TComboBox
       Left = 11
@@ -11710,7 +11710,7 @@ object frmmain: Tfrmmain
     Top = 97
     Width = 665
     Height = 602
-    ActivePage = tsserverconfig
+    ActivePage = tsappsettings
     Align = alClient
     TabOrder = 2
     OnChange = pgcmainChange
@@ -12399,19 +12399,10 @@ object frmmain: Tfrmmain
           TabOrder = 2
           OnClick = btnaddlangfileClick
         end
-        object btndownloadlangfile: TButton
-          Left = 100
-          Top = 114
-          Width = 85
-          Height = 25
-          Caption = 'Download'
-          TabOrder = 3
-          OnClick = btndownloadlangfileClick
-        end
       end
       object grpmisc: TGroupBox
         Left = 3
-        Top = 351
+        Top = 360
         Width = 223
         Height = 205
         Caption = 'Misc'
@@ -12443,7 +12434,6 @@ object frmmain: Tfrmmain
     object tstestpage: TTabSheet
       Caption = 'Test Page'
       ImageIndex = 5
-      TabVisible = False
       object grp1: TGroupBox
         Left = 3
         Top = 16
@@ -12678,16 +12668,9 @@ object frmmain: Tfrmmain
     Top = 305
   end
   object tmrpluginconfigfilder: TTimer
-    Enabled = False
     Interval = 2500
     OnTimer = tmrpluginconfigfilderTimer
-    Left = 48
-    Top = 385
-  end
-  object tmrcheckforupdates: TTimer
-    Interval = 3600000
-    OnTimer = tmrcheckforupdatesTimer
-    Left = 40
-    Top = 449
+    Left = 112
+    Top = 409
   end
 end

@@ -42,8 +42,8 @@ end;
 
 procedure TfrmUpdater.btnUpdateClick(Sender: TObject);
 begin
-  KillTask('RSM.exe');
   RemoveFontResource('Rust.ttf');
+  KillTask('RSM.exe');
   Download('http://inforcer25.co.za/owncloud/index.php/s/RgoqYNTa4pv4wA4/download', '.\RSMnew.zip', True, '.\');
   Start('RSM.exe');
   Close;

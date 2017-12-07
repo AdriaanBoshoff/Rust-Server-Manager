@@ -38,7 +38,6 @@ type
     FDownCount: Integer;
   public
     { Public declarations }
-    procedure CreateParams(var Params: TCreateParams); override;
   end;
 
 var
@@ -76,15 +75,6 @@ end;
 procedure TfrmOxideModBrowser.btnuniversalClick(Sender: TObject);
 begin
   wb1.Navigate('http://oxidemod.org/plugins/categories/universal.58/');
-end;
-
-procedure TfrmOxideModBrowser.CreateParams(var Params: TCreateParams);
-begin
-  inherited;
-  if (FormStyle = fsNormal) then begin
-    Params.ExStyle := Params.ExStyle or WS_EX_APPWINDOW;
-    Params.WndParent := GetDesktopWindow;
-  end;
 end;
 
 procedure TfrmOxideModBrowser.edturlKeyPress(Sender: TObject; var Key: Char);

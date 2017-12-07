@@ -1,6 +1,7 @@
 object frmOxideModBrowser: TfrmOxideModBrowser
   Left = 0
   Top = 0
+  BorderIcons = [biSystemMenu, biMaximize]
   Caption = 'OxideMod Browser'
   ClientHeight = 632
   ClientWidth = 937

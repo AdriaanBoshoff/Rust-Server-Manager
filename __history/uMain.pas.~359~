@@ -130,7 +130,6 @@ type
     tmrpluginconfigfilder: TTimer;
     btnaddlangfile: TButton;
     btndownloadlangfile: TButton;
-    tmrcheckforupdates: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure SaveSettingString(Section, Name, Value: string);
     procedure SaveSettingInteger(Section, Name: string; Value: Integer);
@@ -234,7 +233,6 @@ type
     procedure tmrpluginconfigfilderTimer(Sender: TObject);
     procedure btnaddlangfileClick(Sender: TObject);
     procedure btndownloadlangfileClick(Sender: TObject);
-    procedure tmrcheckforupdatesTimer(Sender: TObject);
   private
     // Dynamic
     timer: TTimer;
@@ -795,7 +793,7 @@ begin
   sversion := httpclient.Get('http://41.185.91.51/RSM/version.html');
   sversion := Trim(sversion);
   version := StrToInt(sversion);
-  if version > 11 then
+  if version > 9 then
   begin
     if Application.MessageBox('There''s a new version of RSM availible. Would you like to download it?', ' RSM Update Available', MB_YESNO) = IDYES then
     begin
@@ -1226,7 +1224,7 @@ begin
   begin
     if MessageDlg('Welcome to RSM.' + sLineBreak + sLineBreak + 'RSM is freeware and only makes money from donations. I spend a lot of my time working on RSM. Consider donating to it' + sLineBreak + ' so that the work on it can continue. The tools I used to make RSM do not come cheap.' + sLineBreak + sLineBreak + 'Do you want to donate to RSM? It will help with development.', mtInformation, [mbYes, mbNo], 0) = mrYes then
     begin
-      Start('paypal.me/AdriaanBoshoff');
+      Start('paypal.me/Inforcer25');
     end;
     SaveSettingString('MSG', 'msg1', 'True');
   end;
@@ -1799,7 +1797,7 @@ var
 begin
   Registry := TRegistry.Create;
   try
-    Registry.RootKey := HKEY_CURRENT_USER; // or: HKEY_LOCAL_MACHINE
+    Registry.RootKey := HKEY_CURRENT_USER;
     if Registry.OpenKey(RegKey, False) then
     begin
       if bRegister = False then
@@ -1850,11 +1848,6 @@ begin
     dcmautobackup.Stop;
     dcmautobackup.Execute;
   end;
-end;
-
-procedure Tfrmmain.tmrcheckforupdatesTimer(Sender: TObject);
-begin
-  CheckForUpdates;
 end;
 
 procedure Tfrmmain.tmrpluginconfigfilderTimer(Sender: TObject);
