@@ -1,3 +1,5 @@
+# Due to the amount of paid and provate components I've used I will no longer make it open source. This is as far as the source code goes.
+
 # Rust Server Manager
 Powerful tool for creating Dedicated Rust Servers on Windows.
 
