@@ -1,5 +1,7 @@
 # Due to the amount of paid and private components I've used I will no longer make it open source. This is as far as the source code goes.
 
+# New Updated Free Version: https://github.com/AdriaanBoshoff/Rust-Server-Manager-FMX
+
 # Rust Server Manager
 Powerful tool for creating Dedicated Rust Servers on Windows.
 
